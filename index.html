@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <script>
+      (function() {
+        try {
+          var _nativeFetch = window.fetch ? window.fetch.bind(window) : null;
+          var descriptor = {
+            get: function() {
+              return _nativeFetch;
+            },
+            set: function(fn) {
+              _nativeFetch = fn;
+            },
+            configurable: true,
+            enumerable: true
+          };
+          Object.defineProperty(window, 'fetch', descriptor);
+          if (typeof window.Window === 'function' && window.Window.prototype) {
+            try {
+              Object.defineProperty(window.Window.prototype, 'fetch', descriptor);
+            } catch (_) {}
+          }
+        } catch (_) {}
+      })();
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Md. Ahsanur Rahaman | AI/ML Researcher & CSE Student</title>
+    <meta
+      name="description"
+      content="Md. Ahsanur Rahaman is a Computer Science and Engineering student and AI/ML researcher working on Brain-Computer Interfaces, EEG signal processing, deep learning, intelligent rehabilitation systems, and modern software applications."
+    />
+    <meta name="keywords" content="Md. Ahsanur Rahaman, AI Researcher, Machine Learning, Deep Learning, Brain Computer Interface, BCI, EEG, Motor Imagery, Neural Signal Processing, Computer Science, Software Developer, React, Python, CycleGAN, Pundra University, Bangladesh" />
+    <meta name="author" content="Md. Ahsanur Rahaman" />
+
+    <!-- Open Graph / Facebook / LinkedIn -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Md. Ahsanur Rahaman | AI/ML Researcher & CSE Student" />
+    <meta
+      property="og:description"
+      content="Computer Science and Engineering student and AI/ML researcher exploring EEG-based Brain-Computer Interfaces, neural signal reconstruction, deep learning, and modern software systems."
+    />
+    <meta property="og:site_name" content="Md. Ahsanur Rahaman Portfolio" />
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Md. Ahsanur Rahaman | AI/ML Researcher & CSE Student" />
+    <meta
+      name="twitter:description"
+      content="AI/ML Researcher exploring Brain-Computer Interfaces, EEG Signal Processing, CycleGAN reconstruction, and software systems."
+    />
+
+    <!-- Google Fonts: Plus Jakarta Sans for refined legible body, Space Grotesk / JetBrains Mono for technical typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Md. Ahsanur Rahaman",
+        "jobTitle": "AI/ML Researcher & Computer Science Engineer",
+        "alumniOf": [
+          {
+            "@type": "EducationalOrganization",
+            "name": "Pundra University of Science & Technology",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Bogura",
+              "addressCountry": "Bangladesh"
+            }
+          }
+        ],
+        "email": "mdahsanurrahaman2456@gmail.com",
+        "url": "https://ahsanur-portfolio.netlify.app/",
+        "sameAs": [
+          "https://github.com/ahsanur-official",
+          "https://www.linkedin.com/in/md-ahsanur-rahaman/"
+        ],
+        "knowsAbout": [
+          "Brain-Computer Interfaces",
+          "EEG Signal Processing",
+          "Deep Learning",
+          "CycleGAN",
+          "Motor Imagery",
+          "Software Engineering",
+          "Full Stack Web Development",
+          "Python",
+          "React.js"
+        ]
+      }
+    </script>
+  </head>
+  <body class="bg-[#07090e] text-slate-100 font-sans antialiased selection:bg-cyan-500/20 selection:text-cyan-200">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+
