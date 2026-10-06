@@ -8,11 +8,11 @@ export function ResearchPipeline() {
   const currentStepData = THESIS_PROJECT.pipelineSteps.find(s => s.stepNumber === activeStep) || THESIS_PROJECT.pipelineSteps[4];
 
   return (
-    <section id="pipeline" className="py-7 sm:py-8 md:py-10 border-t border-slate-800/80 bg-[#06080d]">
+    <section id="pipeline" className="py-5 sm:py-6 md:py-8 border-t border-slate-800/80 bg-[#06080d]">
       <div className="w-full max-w-[1720px] mx-auto px-3.5 sm:px-6 md:px-8 lg:px-10 xl:px-12">
         {/* Header */}
-        <div className="max-w-3xl mb-4 sm:mb-5">
-          <div className="text-xs font-mono text-cyan-400 uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
+        <div className="max-w-4xl lg:max-w-5xl mb-2.5 sm:mb-3">
+          <div className="text-xs font-mono text-cyan-400 uppercase tracking-widest mb-1 flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(6,182,212,0.8)]" />
             <span>04. Featured Research Thesis & Architecture</span>
           </div>
@@ -22,13 +22,13 @@ export function ResearchPipeline() {
           <div className="mt-1 text-xs font-mono text-cyan-300 font-medium">
             {THESIS_PROJECT.academicContext} · {THESIS_PROJECT.supervision}
           </div>
-          <p className="mt-1.5 text-xs sm:text-sm text-slate-300 leading-relaxed text-justify">
+          <p className="mt-1 text-xs sm:text-sm text-slate-300 leading-relaxed text-left">
             {THESIS_PROJECT.overview}
           </p>
         </div>
 
         {/* Pipeline Visual Container with Colorful Border */}
-        <div className="rounded-2xl border border-cyan-500/40 bg-gradient-to-br from-slate-900/95 via-slate-900/70 to-cyan-950/20 backdrop-blur-md p-3.5 sm:p-5 md:p-6 space-y-3.5 sm:space-y-4 shadow-[0_0_30px_rgba(6,182,212,0.12)]">
+        <div className="rounded-2xl border border-cyan-500/40 bg-gradient-to-br from-slate-900/95 via-slate-900/70 to-cyan-950/20 backdrop-blur-md p-2.5 sm:p-3.5 md:p-4 space-y-3 shadow-[0_0_30px_rgba(6,182,212,0.12)]">
           {/* Header with Visual Banner */}
           <div className="relative rounded-xl overflow-hidden border border-slate-800 bg-slate-950 aspect-[16/9] sm:aspect-[21/9] max-h-52 w-full">
             <img
@@ -98,7 +98,7 @@ export function ResearchPipeline() {
                 {currentStepData.label}
               </h4>
 
-              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed text-justify">
+              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed text-left">
                 {currentStepData.description}
               </p>
 
