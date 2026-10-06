@@ -50,7 +50,7 @@ export const PROJECTS_DATA: ProjectItem[] = [
     year: 2026,
     featured: true,
     githubUrl: "https://github.com/ahsanur-official/Interplanetary-Survival-Guide-Martian-Map",
-    image: "/src/assets/images/marsway_mission_map_1791200571783.jpg"
+    image: "/assets/images/marsway_mission_map_1791200571783.jpg"
   },
   {
     id: "crypto-chat",

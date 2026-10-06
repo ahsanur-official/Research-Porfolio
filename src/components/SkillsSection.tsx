@@ -47,14 +47,14 @@ export function SkillsSection() {
 
   return (
     <section id="skills" className="py-7 sm:py-8 md:py-10 border-t border-slate-800/80 bg-[#06080d]">
-      <div className="w-full max-w-[1720px] mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12">
+      <div className="w-full max-w-[1720px] mx-auto px-3.5 sm:px-6 md:px-8 lg:px-10 xl:px-12">
         {/* Section Header */}
-        <div className="max-w-3xl mb-5">
+        <div className="max-w-3xl mb-4 sm:mb-5">
           <div className="text-xs font-mono text-cyan-400 uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(6,182,212,0.8)]" />
             <span>06. Technical & Core Competencies</span>
           </div>
-          <h2 className="font-display text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-white">
+          <h2 className="font-display text-xl xs:text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-white">
             Technical Arsenal
           </h2>
           <p className="mt-1 text-xs sm:text-sm text-slate-300 leading-relaxed text-justify">
@@ -63,39 +63,39 @@ export function SkillsSection() {
         </div>
 
         {/* Skill Groups Grid with Colorful Illuminated Boxes */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-5">
           {SKILL_GROUPS.map((group) => {
             const theme = getCategoryTheme(group.category);
             return (
               <div
                 key={group.category}
-                className={`p-4 sm:p-5 rounded-2xl border transition-all duration-300 flex flex-col justify-between interactive-card ${theme.cardClass}`}
+                className={`p-3.5 sm:p-5 rounded-2xl border transition-all duration-300 flex flex-col justify-between interactive-card ${theme.cardClass}`}
               >
                 <div>
-                  <div className="flex items-center justify-between gap-3 mb-3">
+                  <div className="flex items-center justify-between gap-3 mb-2.5 sm:mb-3">
                     <div className="flex items-center gap-2">
-                      <div className="p-2 rounded-lg bg-slate-950 border border-slate-800">
+                      <div className="p-1.5 sm:p-2 rounded-lg bg-slate-950 border border-slate-800">
                         {theme.icon}
                       </div>
-                      <h3 className="font-bold text-base sm:text-lg text-white tracking-tight">
+                      <h3 className="font-bold text-sm sm:text-base md:text-lg text-white tracking-tight">
                         {group.category}
                       </h3>
                     </div>
-                    <span className={`text-[11px] font-mono px-2 py-0.5 rounded-md border ${theme.badgeClass}`}>
+                    <span className={`text-[10px] sm:text-[11px] font-mono px-2 py-0.5 rounded-md border ${theme.badgeClass}`}>
                       {group.skills.length} Skills
                     </span>
                   </div>
 
-                  <p className="text-xs text-slate-300 mb-3 leading-relaxed text-left">
+                  <p className="text-xs text-slate-300 mb-2.5 sm:mb-3 leading-relaxed text-left">
                     {group.description}
                   </p>
 
                   {/* Skills tags list */}
-                  <div className="flex flex-wrap gap-1.5">
+                  <div className="flex flex-wrap gap-1 sm:gap-1.5">
                     {group.skills.map((skill) => (
                       <span
                         key={skill.name}
-                        className="px-2.5 py-1 rounded-lg text-xs font-mono bg-slate-950/80 border border-slate-800 text-slate-200 hover:border-cyan-500/50 hover:text-cyan-300 transition-colors"
+                        className="px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg text-[11px] sm:text-xs font-mono bg-slate-950/80 border border-slate-800 text-slate-200 hover:border-cyan-500/50 hover:text-cyan-300 transition-colors"
                       >
                         {skill.name}
                       </span>
@@ -108,32 +108,32 @@ export function SkillsSection() {
         </div>
 
         {/* Currently Learning & Active Explorations */}
-        <div className="mt-6 p-4 sm:p-5 rounded-2xl border border-cyan-500/40 bg-gradient-to-r from-slate-900/90 via-slate-900/60 to-cyan-950/30 shadow-[0_0_25px_rgba(6,182,212,0.12)]">
-          <div className="flex items-center gap-2 mb-2.5">
-            <Sparkles className="w-4 h-4 text-cyan-400" />
-            <h3 className="text-xs font-mono font-bold text-cyan-300 uppercase tracking-wider">
+        <div className="mt-4 sm:mt-6 p-3.5 sm:p-5 rounded-2xl border border-cyan-500/40 bg-gradient-to-r from-slate-900/90 via-slate-900/60 to-cyan-950/30 shadow-[0_0_25px_rgba(6,182,212,0.12)]">
+          <div className="flex items-center gap-2 mb-2 sm:mb-2.5">
+            <Sparkles className="w-4 h-4 text-cyan-400 shrink-0" />
+            <h3 className="text-[11px] sm:text-xs font-mono font-bold text-cyan-300 uppercase tracking-wider">
               Currently Expanding & Active Technical Inquiries
             </h3>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs font-mono">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3 text-xs font-mono">
             {CURRENTLY_LEARNING.map((item) => (
-              <div key={item.name} className="p-3 rounded-xl bg-slate-950/80 border border-slate-800">
-                <div className="text-white font-bold text-sm mb-1">{item.name}</div>
-                <div className="text-[11px] text-slate-400 font-sans leading-relaxed text-left">{item.description}</div>
+              <div key={item.name} className="p-2.5 sm:p-3 rounded-xl bg-slate-950/80 border border-slate-800">
+                <div className="text-white font-bold text-xs sm:text-sm mb-0.5 sm:mb-1">{item.name}</div>
+                <div className="text-[10px] sm:text-[11px] text-slate-400 font-sans leading-relaxed text-left">{item.description}</div>
               </div>
             ))}
           </div>
         </div>
 
         {/* Soft Skills & Working Methodologies */}
-        <div className="mt-4 p-4 rounded-xl border border-slate-800/80 bg-slate-950/60 flex flex-wrap items-center justify-between gap-3 text-xs">
-          <span className="font-mono text-slate-400 font-semibold flex items-center gap-1.5">
-            <CheckCircle2 className="w-3.5 h-3.5 text-cyan-400" />
+        <div className="mt-3.5 sm:mt-4 p-3.5 sm:p-4 rounded-xl border border-slate-800/80 bg-slate-950/60 flex flex-wrap items-center justify-between gap-2.5 text-xs">
+          <span className="font-mono text-slate-400 font-semibold flex items-center gap-1.5 text-[11px] sm:text-xs">
+            <CheckCircle2 className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
             <span>Core Working Philosophies:</span>
           </span>
-          <div className="flex flex-wrap gap-2 text-xs font-mono text-slate-300">
+          <div className="flex flex-wrap gap-1.5 sm:gap-2 text-[11px] sm:text-xs font-mono text-slate-300">
             {SOFT_SKILLS.map((item) => (
-              <span key={item.title} className="px-2.5 py-1 rounded bg-slate-900 border border-slate-800" title={item.description}>
+              <span key={item.title} className="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded bg-slate-900 border border-slate-800" title={item.description}>
                 {item.title}
               </span>
             ))}

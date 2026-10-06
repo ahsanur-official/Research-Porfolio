@@ -6,32 +6,49 @@ export function CustomCursor() {
   const [isHovering, setIsHovering] = useState(false);
   const [isClicking, setIsClicking] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+  const [isTouchDevice, setIsTouchDevice] = useState(true);
 
   useEffect(() => {
-    // Only enable custom cursor on non-touch devices
-    if (window.matchMedia("(pointer: coarse)").matches) {
-      return;
+    // Only enable custom cursor on non-touch desktop devices with fine pointer
+    const checkTouch = () => {
+      const isTouch =
+        window.matchMedia("(pointer: coarse)").matches ||
+        "ontouchstart" in window ||
+        navigator.maxTouchPoints > 0 ||
+        window.innerWidth < 1024;
+      setIsTouchDevice(isTouch);
+    };
+
+    checkTouch();
+    window.addEventListener("resize", checkTouch);
+
+    if (isTouchDevice) {
+      return () => window.removeEventListener("resize", checkTouch);
     }
 
     const handleMouseMove = (e: MouseEvent) => {
       setPosition({ x: e.clientX, y: e.clientY });
       if (!isVisible) setIsVisible(true);
 
-      // Check if hovering over clickable or interactive element
       const target = e.target as HTMLElement | null;
-      if (
-        target &&
-        (target.tagName === "BUTTON" ||
+      if (target) {
+        const isInteractive = Boolean(
+          target.tagName === "BUTTON" ||
           target.tagName === "A" ||
-          target.tagName === "INPUT" ||
-          target.tagName === "TEXTAREA" ||
+          target.tagName === "SELECT" ||
+          target.tagName === "SUMMARY" ||
           target.closest("button") ||
           target.closest("a") ||
+          target.closest("nav") ||
+          target.closest("aside") ||
           target.closest(".interactive-card") ||
-          target.classList.contains("group") ||
-          target.hasAttribute("role"))
-      ) {
-        setIsHovering(true);
+          target.closest("[role='button']") ||
+          target.closest("[role='tab']") ||
+          target.closest("[role='menuitem']") ||
+          target.closest("[role='link']") ||
+          target.classList.contains("cursor-pointer")
+        );
+        setIsHovering(isInteractive);
       } else {
         setIsHovering(false);
       }
@@ -39,34 +56,30 @@ export function CustomCursor() {
 
     const handleMouseDown = () => setIsClicking(true);
     const handleMouseUp = () => setIsClicking(false);
+    const handleMouseLeave = () => setIsVisible(false);
+    const handleMouseEnter = () => setIsVisible(true);
 
-    const handleMouseLeave = () => {
-      setIsVisible(false);
-    };
-
-    const handleMouseEnter = () => {
-      setIsVisible(true);
-    };
-
-    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
     window.addEventListener("mousedown", handleMouseDown);
     window.addEventListener("mouseup", handleMouseUp);
     document.addEventListener("mouseleave", handleMouseLeave);
     document.addEventListener("mouseenter", handleMouseEnter);
 
     return () => {
+      window.removeEventListener("resize", checkTouch);
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mousedown", handleMouseDown);
       window.removeEventListener("mouseup", handleMouseUp);
       document.removeEventListener("mouseleave", handleMouseLeave);
       document.removeEventListener("mouseenter", handleMouseEnter);
     };
-  }, [isVisible]);
+  }, [isVisible, isTouchDevice]);
 
   // Smooth trailing cursor animation loop
   useEffect(() => {
-    let animationFrameId: number;
+    if (isTouchDevice) return;
 
+    let animationFrameId: number;
     const animateTrail = () => {
       setTrailingPos((prev) => ({
         x: prev.x + (position.x - prev.x) * 0.25,
@@ -77,12 +90,12 @@ export function CustomCursor() {
 
     animationFrameId = requestAnimationFrame(animateTrail);
     return () => cancelAnimationFrame(animationFrameId);
-  }, [position]);
+  }, [position, isTouchDevice]);
 
-  if (!isVisible) return null;
+  if (isTouchDevice || !isVisible) return null;
 
   return (
-    <>
+    <div className="hidden lg:block">
       {/* Precision Core Dot */}
       <div
         className="fixed top-0 left-0 pointer-events-none z-[9999] -translate-x-1/2 -translate-y-1/2 will-change-transform"
@@ -118,6 +131,6 @@ export function CustomCursor() {
           }`}
         />
       </div>
-    </>
+    </div>
   );
 }

@@ -11,9 +11,9 @@ interface EegChannel {
 }
 
 const CHANNELS: EegChannel[] = [
-  { name: "C3", region: "Left Motor Cortex", functionDesc: "Right Hand Motor Imagery", baseFreq: 10, amplitude: 22, color: "#38bdf8" }, // cyan
-  { name: "Cz", region: "Central Motor Strip", functionDesc: "Foot / Midline Rest", baseFreq: 11, amplitude: 24, color: "#818cf8" }, // indigo
-  { name: "C4", region: "Right Motor Cortex", functionDesc: "Left Hand Motor Imagery", baseFreq: 10, amplitude: 22, color: "#c084fc" }, // purple
+  { name: "C3", region: "Left Motor Cortex", functionDesc: "Right Hand MI", baseFreq: 10, amplitude: 22, color: "#38bdf8" }, // cyan
+  { name: "Cz", region: "Central Motor Strip", functionDesc: "Foot / Rest", baseFreq: 11, amplitude: 24, color: "#818cf8" }, // indigo
+  { name: "C4", region: "Right Motor Cortex", functionDesc: "Left Hand MI", baseFreq: 10, amplitude: 22, color: "#c084fc" }, // purple
 ];
 
 export function EegOscilloscope() {
@@ -23,7 +23,7 @@ export function EegOscilloscope() {
   const [simulatedState, setSimulatedState] = useState<"Rest" | "Left Hand MI" | "Right Hand MI">("Rest");
   const [viewMode, setViewMode] = useState<"oscilloscope" | "spectrum">("oscilloscope");
 
-  const dimsRef = useRef<{ width: number; height: number }>({ width: 400, height: 180 });
+  const dimsRef = useRef<{ width: number; height: number }>({ width: 360, height: 160 });
   const timeOffsetRef = useRef(0);
   const animationFrameIdRef = useRef<number | null>(null);
 
@@ -37,8 +37,8 @@ export function EegOscilloscope() {
 
     const handleResize = () => {
       const rect = container.getBoundingClientRect();
-      const width = Math.max(rect.width, 200);
-      const height = 180;
+      const width = Math.max(rect.width, 180);
+      const height = window.innerWidth < 640 ? 150 : 180;
       dimsRef.current = { width, height };
 
       const dpr = window.devicePixelRatio || 1;
@@ -73,7 +73,7 @@ export function EegOscilloscope() {
       // Technical grid
       ctx.strokeStyle = "rgba(30, 41, 59, 0.4)";
       ctx.lineWidth = 1;
-      const gridStep = 30;
+      const gridStep = width < 300 ? 25 : 30;
 
       ctx.beginPath();
       for (let x = 0; x < width; x += gridStep) {
@@ -121,7 +121,7 @@ export function EegOscilloscope() {
             const t = (x + offset) * 0.045;
             const primaryMu = Math.sin(t * (channel.baseFreq * 0.42)) * channel.amplitude * suppression;
             const betaHarmonic = Math.sin(t * 1.85 + idx) * (channel.amplitude * 0.3);
-            const noise = Math.sin(t * 3.8 + x * 0.08) * 2.0;
+            const noise = Math.sin(t * 3.8 + x * 0.08) * 1.8;
 
             const y = centerY + primaryMu + betaHarmonic + noise;
             if (x === 0) {
@@ -138,64 +138,57 @@ export function EegOscilloscope() {
           { name: "Delta (δ)", range: "0.5-4Hz", power: 20, color: "#94a3b8" },
           { name: "Theta (θ)", range: "4-8Hz", power: 28, color: "#60a5fa" },
           {
-            name: "Mu/Alpha (μ)",
+            name: "Mu/Alpha (μ/α)",
             range: "8-12Hz",
-            power: simulatedState === "Rest" ? 86 : 36,
-            color: "#38bdf8"
+            power: simulatedState === "Rest" ? 88 : 36,
+            color: simulatedState === "Rest" ? "#22d3ee" : "#a855f7"
           },
           {
             name: "Beta (β)",
             range: "13-30Hz",
-            power: simulatedState === "Rest" ? 34 : 76,
-            color: "#c084fc"
+            power: simulatedState !== "Rest" ? 74 : 34,
+            color: "#818cf8"
           },
-          { name: "Gamma (γ)", range: "30-50Hz", power: 18, color: "#f43f5e" }
+          { name: "Gamma (γ)", range: ">30Hz", power: 18, color: "#34d399" }
         ];
 
-        const barWidth = Math.min((width - 40) / bands.length - 14, 56);
-        const totalBarsWidth = bands.length * barWidth;
-        const totalSpacing = width - totalBarsWidth;
-        const gap = totalSpacing / (bands.length + 1);
+        const barWidth = Math.max(16, (width - 40) / bands.length);
+        const startX = 20;
 
         bands.forEach((band, bIdx) => {
-          const x = gap + bIdx * (barWidth + gap);
-          const jitter = isPlaying ? Math.sin(offset * 0.08 + bIdx) * 3 : 0;
-          const currentHeight = Math.max(12, Math.min(120, band.power + jitter));
-          const y = height - 38 - currentHeight;
+          const x = startX + bIdx * barWidth;
+          const barHeight = ((height - 40) * band.power) / 100;
+          const y = height - 20 - barHeight;
 
           // Bar gradient fill
-          const grad = ctx.createLinearGradient(0, y, 0, height - 38);
+          const grad = ctx.createLinearGradient(0, y, 0, height - 20);
           grad.addColorStop(0, band.color);
           grad.addColorStop(1, "rgba(15, 23, 42, 0.4)");
-
           ctx.fillStyle = grad;
-          ctx.fillRect(x, y, barWidth, currentHeight);
+          ctx.fillRect(x + 4, y, barWidth - 8, barHeight);
 
           // Top highlight line
           ctx.fillStyle = band.color;
-          ctx.fillRect(x, y, barWidth, 2);
+          ctx.fillRect(x + 4, y, barWidth - 8, 2);
 
-          // Labels
-          ctx.font = "10px 'JetBrains Mono', monospace";
-          ctx.fillStyle = "#cbd5e1";
+          // Band label
+          ctx.fillStyle = "#94a3b8";
+          ctx.font = "9px monospace";
           ctx.textAlign = "center";
-          ctx.fillText(band.name, x + barWidth / 2, height - 22);
-
-          ctx.font = "9px 'JetBrains Mono', monospace";
-          ctx.fillStyle = "#64748b";
-          ctx.fillText(band.range, x + barWidth / 2, height - 9);
+          ctx.fillText(band.name.split(" ")[0], x + barWidth / 2, height - 6);
         });
-
-        ctx.textAlign = "left";
-      }
-
-      if (isPlaying) {
-        timeOffsetRef.current += 2;
-        animationFrameIdRef.current = requestAnimationFrame(render);
       }
     };
 
-    render();
+    const loop = () => {
+      if (isPlaying) {
+        timeOffsetRef.current += 2.2;
+      }
+      render();
+      animationFrameIdRef.current = requestAnimationFrame(loop);
+    };
+
+    animationFrameIdRef.current = requestAnimationFrame(loop);
 
     return () => {
       if (resizeObserver) {
@@ -210,22 +203,24 @@ export function EegOscilloscope() {
   }, [isPlaying, simulatedState, viewMode]);
 
   return (
-    <div className="border border-cyan-500/40 bg-gradient-to-br from-[#080d1a] to-[#07090f] backdrop-blur-md rounded-2xl p-4 sm:p-5 shadow-[0_0_30px_rgba(6,182,212,0.14)] space-y-3.5">
-      {/* Instrument Header: Status, Title, and Mode Controls all cleanly separated */}
-      <div className="flex flex-wrap items-center justify-between gap-2.5 pb-3 border-b border-slate-800/90">
-        <div className="flex items-center gap-2">
-          <Activity className="w-4 h-4 text-cyan-400 animate-pulse" />
-          <span className="text-xs font-mono font-bold tracking-wider text-white uppercase">
+    <div className="border border-cyan-500/40 bg-gradient-to-br from-[#080d1a] to-[#07090f] backdrop-blur-md rounded-2xl p-3 sm:p-4 md:p-5 shadow-[0_0_30px_rgba(6,182,212,0.14)] space-y-3">
+      {/* Instrument Header: Status, Title, and Mode Controls */}
+      <div className="flex flex-wrap items-center justify-between gap-2 pb-2.5 border-b border-slate-800/90">
+        <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
+          <Activity className="w-4 h-4 text-cyan-400 animate-pulse shrink-0" />
+          <span className="text-xs font-mono font-bold tracking-wider text-white uppercase truncate">
             EEG Signal Laboratory
           </span>
-          <span className="text-[11px] font-mono text-cyan-400/90 font-medium">· 10-20 System</span>
+          <span className="text-[10px] sm:text-[11px] font-mono text-cyan-400/90 font-medium hidden xs:inline">
+            · 10-20
+          </span>
         </div>
 
-        {/* Active state badge placed cleanly in header, never obscuring waveforms */}
+        {/* Active state badge placed cleanly in header */}
         <div className="flex items-center gap-1.5 text-xs font-mono">
-          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-800 text-[11px] text-slate-300">
+          <div className="flex items-center gap-1.5 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-lg bg-slate-900 border border-slate-800 text-[10px] sm:text-[11px] text-slate-300">
             <span
-              className={`w-2 h-2 rounded-full ${
+              className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full ${
                 simulatedState === "Rest"
                   ? "bg-cyan-400 animate-pulse"
                   : simulatedState === "Left Hand MI"
@@ -238,50 +233,47 @@ export function EegOscilloscope() {
 
           <button
             onClick={() => setViewMode(viewMode === "oscilloscope" ? "spectrum" : "oscilloscope")}
-            className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-800/90 hover:bg-slate-700 text-slate-200 hover:text-cyan-300 transition-colors border border-slate-700/60"
+            className="flex items-center gap-1 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-lg bg-slate-800/90 hover:bg-slate-700 text-slate-200 hover:text-cyan-300 transition-colors border border-slate-700/60 text-xs"
             title="Toggle between Waveform and Power Spectrum"
           >
             {viewMode === "oscilloscope" ? <BarChart3 className="w-3.5 h-3.5 text-cyan-400" /> : <Waves className="w-3.5 h-3.5 text-cyan-400" />}
-            <span className="hidden sm:inline">{viewMode === "oscilloscope" ? "Spectrum" : "Waves"}</span>
+            <span className="hidden xs:inline">{viewMode === "oscilloscope" ? "Spectrum" : "Waves"}</span>
           </button>
 
           <button
             onClick={() => setIsPlaying(!isPlaying)}
-            className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-800/90 hover:bg-slate-700 text-slate-200 hover:text-white transition-colors border border-slate-700/60"
+            className="flex items-center gap-1 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-lg bg-slate-800/90 hover:bg-slate-700 text-slate-200 hover:text-white transition-colors border border-slate-700/60 text-xs"
           >
-            {isPlaying ? <Pause className="w-3.5 h-3.5 text-amber-400" /> : <Play className="w-3.5 h-3.5 text-emerald-400" />}
+            {isPlaying ? <Pause className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-amber-400" /> : <Play className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-emerald-400" />}
             <span>{isPlaying ? "Live" : "Hold"}</span>
           </button>
         </div>
       </div>
 
-      {/* Main Signal Display Area: Split Channel Gutter + Clean Waveform Canvas (Zero Text Overlap) */}
+      {/* Main Signal Display Area */}
       <div className="rounded-xl overflow-hidden border border-slate-800 bg-[#070b14] flex">
-        {/* Left Channel Metadata Strip (Only shown in oscilloscope mode) */}
+        {/* Left Channel Metadata Strip */}
         {viewMode === "oscilloscope" && (
-          <div className="w-24 sm:w-36 shrink-0 border-r border-slate-800/80 bg-[#050811] flex flex-col justify-around p-2 sm:p-2.5 text-xs font-mono">
+          <div className="w-14 xs:w-16 sm:w-28 shrink-0 border-r border-slate-800/80 bg-[#050811] flex flex-col justify-around p-1.5 sm:p-2 text-xs font-mono">
             {CHANNELS.map((channel) => {
               const isERD =
                 (simulatedState === "Left Hand MI" && channel.name === "C4") ||
                 (simulatedState === "Right Hand MI" && channel.name === "C3");
 
               return (
-                <div key={channel.name} className="space-y-0.5">
+                <div key={channel.name} className="space-y-0.5 text-center sm:text-left">
                   <div className="flex items-center justify-between">
                     <span className="font-bold text-xs" style={{ color: channel.color }}>
                       {channel.name}
                     </span>
                     {isERD ? (
-                      <span className="text-[10px] text-purple-400 font-bold animate-pulse">ERD ↓</span>
+                      <span className="text-[9px] sm:text-[10px] text-purple-400 font-bold animate-pulse">ERD↓</span>
                     ) : (
-                      <span className="text-[10px] text-slate-400">{channel.baseFreq}Hz</span>
+                      <span className="text-[9px] sm:text-[10px] text-slate-400 hidden xs:inline">{channel.baseFreq}Hz</span>
                     )}
                   </div>
-                  <div className="text-[10px] text-slate-400 truncate hidden sm:block">
+                  <div className="text-[9px] sm:text-[10px] text-slate-400 truncate hidden sm:block">
                     {channel.region}
-                  </div>
-                  <div className="text-[9px] text-slate-400 truncate hidden sm:block">
-                    {channel.functionDesc}
                   </div>
                 </div>
               );
@@ -290,61 +282,61 @@ export function EegOscilloscope() {
         )}
 
         {/* Right Canvas: Pure Waveforms with zero text interference */}
-        <div ref={containerRef} className="flex-1 relative overflow-hidden h-[180px]">
-          <canvas ref={canvasRef} className="block w-full h-[180px]" />
+        <div ref={containerRef} className="flex-1 relative overflow-hidden h-[150px] sm:h-[180px]">
+          <canvas ref={canvasRef} className="block w-full h-[150px] sm:h-[180px]" />
         </div>
       </div>
 
       {/* Motor Imagery Controls */}
       <div className="space-y-2">
-        <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
-          <span className="text-[11px] text-slate-300 font-mono flex items-center gap-1.5 font-medium">
-            <Zap className="w-3.5 h-3.5 text-cyan-400" />
-            <span>Simulate Motor Intention:</span>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 sm:gap-2 text-xs">
+          <span className="text-[11px] text-slate-300 font-mono flex items-center gap-1.5 font-medium shrink-0">
+            <Zap className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+            <span>Motor Intention:</span>
           </span>
-          <div className="flex flex-wrap items-center gap-1.5">
+          <div className="grid grid-cols-3 gap-1 sm:flex sm:flex-wrap sm:gap-1.5 w-full sm:w-auto">
             <button
               onClick={() => setSimulatedState("Rest")}
-              className={`px-3 py-1 rounded-lg text-xs font-mono transition-all ${
+              className={`px-1.5 sm:px-3 py-1.5 rounded-lg text-[10px] sm:text-xs font-mono transition-all text-center ${
                 simulatedState === "Rest"
                   ? "bg-cyan-500/25 text-cyan-300 border border-cyan-400 shadow-[0_0_12px_rgba(6,182,212,0.3)] font-semibold"
                   : "bg-slate-900/80 text-slate-400 hover:text-slate-200 border border-slate-800"
               }`}
             >
-              Rest Baseline
+              Rest
             </button>
             <button
               onClick={() => setSimulatedState("Left Hand MI")}
-              className={`px-3 py-1 rounded-lg text-xs font-mono transition-all ${
+              className={`px-1.5 sm:px-3 py-1.5 rounded-lg text-[10px] sm:text-xs font-mono transition-all text-center ${
                 simulatedState === "Left Hand MI"
                   ? "bg-purple-500/25 text-purple-300 border border-purple-400 shadow-[0_0_12px_rgba(192,132,252,0.3)] font-semibold"
                   : "bg-slate-900/80 text-slate-400 hover:text-slate-200 border border-slate-800"
               }`}
             >
-              Left Hand (C4 ERD)
+              Left Hand
             </button>
             <button
               onClick={() => setSimulatedState("Right Hand MI")}
-              className={`px-3 py-1 rounded-lg text-xs font-mono transition-all ${
+              className={`px-1.5 sm:px-3 py-1.5 rounded-lg text-[10px] sm:text-xs font-mono transition-all text-center ${
                 simulatedState === "Right Hand MI"
                   ? "bg-sky-500/25 text-sky-300 border border-sky-400 shadow-[0_0_12px_rgba(56,189,248,0.3)] font-semibold"
                   : "bg-slate-900/80 text-slate-400 hover:text-slate-200 border border-slate-800"
               }`}
             >
-              Right Hand (C3 ERD)
+              Right Hand
             </button>
           </div>
         </div>
 
         {/* Biofeedback Telemetry Context Banner */}
-        <div className="p-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-[11px] font-mono text-slate-400 flex items-center justify-between gap-2">
+        <div className="p-2 sm:p-2.5 rounded-xl bg-slate-950/80 border border-slate-800 text-[10px] sm:text-[11px] font-mono text-slate-400 flex items-center justify-between gap-2">
           <span className="text-slate-300 font-semibold truncate">
-            {simulatedState === "Rest" && "Active State: Symmetrical bilateral baseline Mu (8-12 Hz) oscillations."}
-            {simulatedState === "Left Hand MI" && "Contralateral Motor Cortex ERD: Right hemisphere C4 Mu power attenuated by ~68%."}
-            {simulatedState === "Right Hand MI" && "Contralateral Motor Cortex ERD: Left hemisphere C3 Mu power attenuated by ~68%."}
+            {simulatedState === "Rest" && "Active: Symmetrical baseline Mu (8-12 Hz) oscillations."}
+            {simulatedState === "Left Hand MI" && "Contralateral ERD: C4 Mu attenuated by ~68%."}
+            {simulatedState === "Right Hand MI" && "Contralateral ERD: C3 Mu attenuated by ~68%."}
           </span>
           <span className="text-cyan-400 font-bold shrink-0">
-            {simulatedState === "Rest" ? "250 Hz Live" : "Intent Decoded"}
+            {simulatedState === "Rest" ? "250 Hz" : "Decoded"}
           </span>
         </div>
       </div>

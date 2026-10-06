@@ -45,23 +45,23 @@ export function ResearchInterests() {
 
   return (
     <section id="research" className="py-7 sm:py-8 md:py-10 border-t border-slate-800/80 bg-[#07090e]">
-      <div className="w-full max-w-[1720px] mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-5 gap-2">
+      <div className="w-full max-w-[1720px] mx-auto px-3.5 sm:px-6 md:px-8 lg:px-10 xl:px-12">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-4 sm:mb-5 gap-2">
           <div>
             <div className="text-xs font-mono text-cyan-400 uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(6,182,212,0.8)]" />
               <span>03. Scientific Inquiry & Neuroengineering</span>
             </div>
-            <h2 className="font-display text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-white">
+            <h2 className="font-display text-xl xs:text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-white">
               Research Interests
             </h2>
-            <p className="mt-1.5 text-xs sm:text-sm text-slate-300 max-w-2xl text-justify">
+            <p className="mt-1 text-xs sm:text-sm text-slate-300 max-w-2xl text-justify">
               Focus areas spanning non-invasive neural decoders, oscillatory brain dynamics, generative reconstruction, and assistive biomedical applications.
             </p>
           </div>
 
           {/* Interactive filter tabs */}
-          <div className="flex flex-wrap items-center gap-1.5 p-1 bg-slate-900 border border-slate-800 rounded-xl">
+          <div className="flex flex-wrap items-center gap-1 sm:gap-1.5 p-1 bg-slate-900 border border-slate-800 rounded-xl overflow-x-auto max-w-full">
             {categories.map((cat) => (
               <button
                 key={cat}
