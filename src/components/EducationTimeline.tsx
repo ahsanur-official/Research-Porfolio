@@ -1,4 +1,4 @@
-import { Award, Calendar, MapPin } from "lucide-react";
+import { Award, Calendar, MapPin, CheckCircle } from "lucide-react";
 import { PROFILE_DATA } from "../data/profile";
 
 export function EducationTimeline() {
@@ -8,13 +8,13 @@ export function EducationTimeline() {
         <div className="max-w-3xl mb-4 sm:mb-5">
           <div className="text-xs font-mono text-cyan-400 uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(6,182,212,0.8)]" />
-            <span>07. Scholastic Foundations</span>
+            <span>07. Scholastic Foundations & Academic Timeline</span>
           </div>
           <h2 className="font-display text-xl xs:text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-white">
             Academic Timeline
           </h2>
           <p className="mt-1 text-xs sm:text-sm text-slate-300 text-justify">
-            A consistent record of academic excellence, culminating in advanced computer science coursework and neural engineering research.
+            A consistent record of top academic distinction (GPA 5.00 in SSC & HSC; CGPA 3.83 in B.Sc CSE), culminating in advanced neural engineering research and peer-reviewed publications.
           </p>
         </div>
 
@@ -59,10 +59,10 @@ export function EducationTimeline() {
                   </div>
 
                   {edu.details && (
-                    <ul className="mt-2.5 pt-2 border-t border-slate-800/80 space-y-1 text-xs sm:text-sm text-slate-300">
+                    <ul className="mt-2.5 pt-2 border-t border-slate-800/80 space-y-1.5 text-xs sm:text-sm text-slate-300">
                       {edu.details.map((detail, dIdx) => (
                         <li key={dIdx} className="flex items-start gap-2 text-left">
-                          <span className="text-cyan-400 font-mono mt-0.5">›</span>
+                          <CheckCircle className="w-3.5 h-3.5 text-cyan-400 shrink-0 mt-0.5" />
                           <span>{detail}</span>
                         </li>
                       ))}

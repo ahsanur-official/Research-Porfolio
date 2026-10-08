@@ -1,4 +1,4 @@
-import { MapPin, GraduationCap, Award, BookOpen, Globe2, FileCheck, Compass, Sparkles } from "lucide-react";
+import { MapPin, GraduationCap, Award, BookOpen, Globe2, FileCheck, Compass, Sparkles, UserCheck } from "lucide-react";
 import { PROFILE_DATA } from "../data/profile";
 
 export function About() {
@@ -12,11 +12,11 @@ export function About() {
               <span>01. Background & Academic Trajectory</span>
             </div>
             <h2 className="font-display text-xl xs:text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-white">
-              About Me
+              About Researcher
             </h2>
           </div>
           <p className="text-xs sm:text-sm font-mono text-cyan-400/90 font-medium">
-            Pundra University of Science & Technology · B.Sc in CSE (2023 – Ongoing)
+            Pundra University of Science & Technology · B.Sc in CSE (01/2023 – Ongoing)
           </p>
         </div>
 
@@ -27,19 +27,19 @@ export function About() {
               <p className="text-base sm:text-lg text-slate-200 font-medium leading-relaxed text-justify">
                 I am a Computer Science & Engineering undergraduate at{" "}
                 <span className="text-white font-semibold">Pundra University of Science & Technology</span> in Bogura, Bangladesh, maintaining a{" "}
-                <span className="text-cyan-300 font-mono font-bold">3.83 / 4.00 CGPA</span> across 7 semesters.
+                <span className="text-cyan-300 font-mono font-bold">3.83 / 4.00 CGPA</span> across 7 semesters, following uninterrupted straight-A distinctions (<span className="text-emerald-300 font-mono font-semibold">GPA 5.00 / 5.00</span> in both HSC & SSC).
               </p>
 
               <p className="text-justify text-slate-300">
-                My core scientific focus is rooted in <strong className="text-white font-medium">Artificial Intelligence for Brain-Computer Interfaces (BCI)</strong> and intelligent neurorehabilitation. Through my undergraduate research, I investigate how generative adversarial networks (CycleGAN) and diffusion probabilistic models can reconstruct high-fidelity, healthy-like EEG patterns from impaired motor imagery trials.
+                My core scientific focus is rooted in <strong className="text-white font-medium">Artificial Intelligence for Brain-Computer Interfaces (BCI)</strong> and intelligent neurorehabilitation. Guided by academic mentors <span className="text-slate-200 font-medium">Md. Habib Ehsanul Hoque</span> (Head of CSE) and <span className="text-slate-200 font-medium">Mrittika Mahbub</span> (Lecturer), my research investigates how generative adversarial networks (Movement-Aware CycleGAN) and diffusion probabilistic models reconstruct high-fidelity, healthy-like EEG patterns from impaired stroke and Parkinson's disease cohorts.
               </p>
 
               <p className="text-justify text-slate-300">
-                Beyond computational neuroscience, I operate as a versatile software developer who bridges algorithmic models with tangible software systems. From building NASA-data-driven mission planners (MARSWAY) to architecting cryptographic chat engines and custom language compilers (KhaliError-Lang), I prioritize mathematical rigour, code clarity, and architectural integrity.
+                Beyond computational neuroscience, I operate as a versatile software engineer who bridges algorithmic models with tangible software platforms. From engineering NASA-dataset-driven mission planners (<strong className="text-slate-200">MARSWAY</strong>, winning <em>Galactic Problem Solver</em> at NASA Space Apps) to architecting cryptographic chat engines (<strong className="text-slate-200">Crypto Chat</strong>) and custom programming languages (<strong className="text-slate-200">KhaliError-Lang</strong>), I prioritize mathematical rigour, code clarity, and architectural integrity.
               </p>
 
               <p className="text-justify text-slate-300">
-                At my university, I serve as the <strong className="text-white font-medium">General Secretary of the PUB Computer & Programming Club</strong> and the <strong className="text-white font-medium">Convener of the BASIS Students' Forum PUB Chapter</strong>, organizing regional hackathons, mentoring freshmen in competitive programming, and championing scientific research literacy.
+                In university governance, I serve as the <strong className="text-white font-medium">General Secretary of the PUB Computer & Programming Club (PUB CPC)</strong> for 2026 (having served as Vice President in 2025) and <strong className="text-white font-medium">Convener of the BASIS Students' Forum PUB Chapter</strong> (2025–2026), organizing national-level tech events, programming contests, and mentoring junior cohorts in algorithms and data structures.
               </p>
             </div>
 
@@ -47,13 +47,15 @@ export function About() {
             <div className="p-3 rounded-xl bg-slate-950/70 border border-slate-800 text-xs font-mono flex flex-wrap items-center justify-between gap-1.5 sm:gap-2 text-slate-400">
               <span className="text-cyan-400 font-bold flex items-center gap-1.5">
                 <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
-                <span>Research Values:</span>
+                <span>Academic Tenets:</span>
               </span>
-              <span>Zero-Leakage Holdouts</span>
+              <span>Patient-Level Holdouts</span>
               <span className="text-slate-700">·</span>
               <span>Reproducible Ablations</span>
               <span className="text-slate-700">·</span>
-              <span className="text-emerald-400">Scopus/IEEE Indexing</span>
+              <span className="text-emerald-400">IEEE Scopus Indexed</span>
+              <span className="text-slate-700">·</span>
+              <span className="text-indigo-400">IELTS B2 (6.0)</span>
             </div>
           </div>
 
@@ -63,7 +65,7 @@ export function About() {
             <div className="rounded-2xl border border-indigo-500/50 bg-gradient-to-br from-slate-900/95 via-slate-900/80 to-indigo-950/30 p-3.5 sm:p-5 space-y-3 shadow-[0_0_25px_rgba(99,102,241,0.16)] hover:border-indigo-400 transition-all">
               <h3 className="text-xs font-mono font-bold text-cyan-400 uppercase tracking-widest flex items-center gap-2">
                 <Award className="w-4 h-4 text-cyan-400" />
-                <span>Academic Dossier</span>
+                <span>Verified Academic Dossier</span>
               </h3>
 
               <dl className="space-y-2 text-xs sm:text-sm divide-y divide-slate-800/80">
@@ -73,14 +75,14 @@ export function About() {
                     <span>Location</span>
                   </dt>
                   <dd className="font-medium text-slate-200 text-left xs:text-right">
-                    {PROFILE_DATA.contact.location}
+                    Bogura (Present) · Joypurhat (Permanent)
                   </dd>
                 </div>
 
                 <div className="pt-2 flex flex-col xs:flex-row xs:items-center justify-between gap-1 xs:gap-4">
                   <dt className="text-slate-400 flex items-center gap-2">
                     <GraduationCap className="w-3.5 h-3.5 text-sky-400 shrink-0" />
-                    <span>Degree</span>
+                    <span>Current Degree</span>
                   </dt>
                   <dd className="font-medium text-slate-200 text-left xs:text-right">
                     B.Sc in Computer Science & Engineering
@@ -103,7 +105,7 @@ export function About() {
                     <span>Cumulative GPA</span>
                   </dt>
                   <dd className="font-mono font-bold text-emerald-300 text-left xs:text-right">
-                    3.83 / 4.00 <span className="text-[11px] text-slate-400 font-normal">(7 Semesters)</span>
+                    3.83 / 4.00 <span className="text-[11px] text-slate-400 font-normal">(Up to 7th Semester)</span>
                   </dd>
                 </div>
 
@@ -114,6 +116,16 @@ export function About() {
                   </dt>
                   <dd className="font-mono text-purple-300 font-bold text-left xs:text-right">
                     Overall 6.0 <span className="text-[11px] text-slate-400 font-normal">(L 5.5, R 5.5, W 6.0, S 6.0)</span>
+                  </dd>
+                </div>
+
+                <div className="pt-2 flex flex-col xs:flex-row xs:items-center justify-between gap-1 xs:gap-4">
+                  <dt className="text-slate-400 flex items-center gap-2">
+                    <UserCheck className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                    <span>Personal Info</span>
+                  </dt>
+                  <dd className="font-mono text-slate-200 text-left xs:text-right text-xs">
+                    DOB: 27/01/2003 · Nationality: Bangladeshi
                   </dd>
                 </div>
               </dl>
@@ -142,7 +154,7 @@ export function About() {
                 <span>Academic Intentions & Target Opportunities</span>
               </div>
               <p className="text-slate-300 text-xs leading-relaxed text-justify">
-                Actively seeking a <strong className="text-white font-medium">Research-Focused Master’s Programme</strong> or <strong className="text-white font-medium">Research Assistantship</strong> in AI-driven neural engineering, biomedical signal processing, and intelligent rehabilitation systems. Also preparing for competitive international graduate scholarships including the Chinese Government Scholarship (CSC).
+                Actively seeking a <strong className="text-white font-medium">Research-Focused Master’s Programme</strong> or <strong className="text-white font-medium">Research Assistantship</strong> in AI-driven neural engineering, biomedical signal processing, and intelligent rehabilitation systems. Also preparing for competitive international graduate scholarships including the Chinese Government Scholarship (CSC) and European fellowships.
               </p>
             </div>
           </div>
