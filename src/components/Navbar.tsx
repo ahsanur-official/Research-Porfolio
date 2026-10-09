@@ -22,6 +22,8 @@ import {
   Globe
 } from "lucide-react";
 import { PROFILE_DATA } from "../data/profile";
+import { ThemeSelector } from "./ThemeSelector";
+import { ContentReadingProgressBar } from "./ContentReadingProgressBar";
 
 interface NavbarProps {
   researchMode: boolean;
@@ -153,6 +155,9 @@ export function Navbar({ researchMode, onToggleResearchMode, onOpenCvModal }: Na
                 </span>
               </button>
 
+              {/* Theme Palette Selector */}
+              <ThemeSelector variant="dropdown" />
+
               {/* Direct CV Button on tablet/desktop */}
               <button
                 onClick={onOpenCvModal}
@@ -175,6 +180,9 @@ export function Navbar({ researchMode, onToggleResearchMode, onOpenCvModal }: Na
             </div>
           </div>
         </div>
+
+        {/* Subtle Horizontal Reading Progress Bar for Main Content Sections */}
+        <ContentReadingProgressBar />
       </header>
 
       {/* Slide-out Hamburger Drawer Menu */}
@@ -287,6 +295,11 @@ export function Navbar({ researchMode, onToggleResearchMode, onOpenCvModal }: Na
                     />
                   </div>
                 </button>
+
+                {/* Accent Color Palette Selector in Drawer */}
+                <div className="pt-2 border-t border-slate-800/80">
+                  <ThemeSelector variant="segmented" />
+                </div>
               </div>
 
               {/* Navigation Links List */}

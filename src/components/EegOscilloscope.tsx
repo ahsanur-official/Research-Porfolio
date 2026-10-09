@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import { Activity, Play, Pause, BarChart3, Waves, Zap } from "lucide-react";
+import { useTheme } from "../context/ThemeContext";
 
 interface EegChannel {
   name: string;
@@ -10,18 +11,25 @@ interface EegChannel {
   color: string;
 }
 
-const CHANNELS: EegChannel[] = [
-  { name: "C3", region: "Left Motor Cortex", functionDesc: "Right Hand MI", baseFreq: 10, amplitude: 22, color: "#38bdf8" }, // cyan
-  { name: "Cz", region: "Central Motor Strip", functionDesc: "Foot / Rest", baseFreq: 11, amplitude: 24, color: "#818cf8" }, // indigo
-  { name: "C4", region: "Right Motor Cortex", functionDesc: "Left Hand MI", baseFreq: 10, amplitude: 22, color: "#c084fc" }, // purple
+const BASE_CHANNELS: EegChannel[] = [
+  { name: "C3", region: "Left Motor Cortex", functionDesc: "Right Hand MI", baseFreq: 10, amplitude: 22, color: "#38bdf8" },
+  { name: "Cz", region: "Central Motor Strip", functionDesc: "Foot / Rest", baseFreq: 11, amplitude: 24, color: "#818cf8" },
+  { name: "C4", region: "Right Motor Cortex", functionDesc: "Left Hand MI", baseFreq: 10, amplitude: 22, color: "#c084fc" },
 ];
 
 export function EegOscilloscope() {
+  const { activeTheme } = useTheme();
   const containerRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(true);
   const [simulatedState, setSimulatedState] = useState<"Rest" | "Left Hand MI" | "Right Hand MI">("Rest");
   const [viewMode, setViewMode] = useState<"oscilloscope" | "spectrum">("oscilloscope");
+
+  const channels = useMemo(() => [
+    { ...BASE_CHANNELS[0], color: activeTheme.lightHex },
+    BASE_CHANNELS[1],
+    BASE_CHANNELS[2],
+  ], [activeTheme]);
 
   const dimsRef = useRef<{ width: number; height: number }>({ width: 360, height: 160 });
   const timeOffsetRef = useRef(0);
@@ -90,9 +98,9 @@ export function EegOscilloscope() {
 
       if (viewMode === "oscilloscope") {
         // Render 3 Pure Waveforms without ANY overlapping text
-        const channelHeight = height / CHANNELS.length;
+        const channelHeight = height / channels.length;
 
-        CHANNELS.forEach((channel, idx) => {
+        channels.forEach((channel, idx) => {
           const centerY = channelHeight * idx + channelHeight / 2;
 
           // Zero line
@@ -141,7 +149,7 @@ export function EegOscilloscope() {
             name: "Mu/Alpha (μ/α)",
             range: "8-12Hz",
             power: simulatedState === "Rest" ? 88 : 36,
-            color: simulatedState === "Rest" ? "#22d3ee" : "#a855f7"
+            color: simulatedState === "Rest" ? activeTheme.lightHex : "#a855f7"
           },
           {
             name: "Beta (β)",
@@ -200,7 +208,7 @@ export function EegOscilloscope() {
         cancelAnimationFrame(animationFrameIdRef.current);
       }
     };
-  }, [isPlaying, simulatedState, viewMode]);
+  }, [isPlaying, simulatedState, viewMode, channels, activeTheme]);
 
   return (
     <div className="border border-cyan-500/40 bg-gradient-to-br from-[#080d1a] to-[#07090f] backdrop-blur-md rounded-2xl p-3 sm:p-4 md:p-5 shadow-[0_0_30px_rgba(6,182,212,0.14)] space-y-3">
@@ -255,7 +263,7 @@ export function EegOscilloscope() {
         {/* Left Channel Metadata Strip */}
         {viewMode === "oscilloscope" && (
           <div className="w-14 xs:w-16 sm:w-28 shrink-0 border-r border-slate-800/80 bg-[#050811] flex flex-col justify-around p-1.5 sm:p-2 text-xs font-mono">
-            {CHANNELS.map((channel) => {
+            {channels.map((channel) => {
               const isERD =
                 (simulatedState === "Left Hand MI" && channel.name === "C4") ||
                 (simulatedState === "Right Hand MI" && channel.name === "C3");

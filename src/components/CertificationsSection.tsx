@@ -1,14 +1,18 @@
 import { ExternalLink, CheckCircle, Clock } from "lucide-react";
 import { CERTIFICATIONS } from "../data/experience";
+import { ReadingTimeBadge } from "./ReadingTimeBadge";
 
 export function CertificationsSection() {
   return (
     <section id="certifications" className="py-7 sm:py-8 md:py-10 border-t border-slate-800/80 bg-[#06080d]">
       <div className="w-full max-w-[1720px] mx-auto px-3.5 sm:px-6 md:px-8 lg:px-10 xl:px-12">
         <div className="max-w-3xl mb-4 sm:mb-5">
-          <div className="text-xs font-mono text-cyan-400 uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(6,182,212,0.8)]" />
-            <span>10. Verified Credentials</span>
+          <div className="flex flex-wrap items-center gap-2 sm:gap-2.5 mb-1.5">
+            <div className="text-xs font-mono text-cyan-400 uppercase tracking-widest flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(6,182,212,0.8)]" />
+              <span>10. Verified Credentials</span>
+            </div>
+            <ReadingTimeBadge time="1 min" wordCount={180} />
           </div>
           <h2 className="font-display text-xl xs:text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-white">
             Certifications & Training

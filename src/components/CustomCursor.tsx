@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
+import { useTheme } from "../context/ThemeContext";
 
 export function CustomCursor() {
+  const { activeTheme } = useTheme();
   const [position, setPosition] = useState({ x: -100, y: -100 });
   const [trailingPos, setTrailingPos] = useState({ x: -100, y: -100 });
   const [isHovering, setIsHovering] = useState(false);
@@ -106,11 +108,15 @@ export function CustomCursor() {
         <div
           className={`rounded-full transition-all duration-150 ${
             isClicking
-              ? "w-1.5 h-1.5 bg-cyan-200 scale-75 shadow-[0_0_14px_rgba(34,211,238,1)]"
+              ? "w-1.5 h-1.5 scale-75"
               : isHovering
-              ? "w-2.5 h-2.5 bg-cyan-300 shadow-[0_0_12px_rgba(6,182,212,0.95)]"
-              : "w-2 h-2 bg-cyan-400 shadow-[0_0_8px_rgba(6,182,212,0.8)]"
+              ? "w-2.5 h-2.5"
+              : "w-2 h-2"
           }`}
+          style={{
+            backgroundColor: isClicking ? activeTheme.lighterHex : isHovering ? activeTheme.lightHex : activeTheme.hex,
+            boxShadow: `0 0 ${isClicking ? "14px" : isHovering ? "12px" : "8px"} ${activeTheme.glow}`,
+          }}
         />
       </div>
 
@@ -124,11 +130,16 @@ export function CustomCursor() {
         <div
           className={`rounded-full border transition-all duration-200 ${
             isClicking
-              ? "w-8 h-8 border-cyan-300/90 bg-cyan-400/20 shadow-[0_0_20px_rgba(6,182,212,0.5)] scale-90"
+              ? "w-8 h-8 scale-90"
               : isHovering
-              ? "w-11 h-11 border-cyan-400/80 bg-cyan-500/10 shadow-[0_0_25px_rgba(6,182,212,0.4)] scale-110"
-              : "w-7 h-7 border-cyan-500/30 bg-cyan-500/5 shadow-[0_0_10px_rgba(6,182,212,0.15)] scale-100"
+              ? "w-11 h-11 scale-110"
+              : "w-7 h-7 scale-100"
           }`}
+          style={{
+            borderColor: isClicking ? activeTheme.lightHex : isHovering ? activeTheme.hex : activeTheme.border,
+            backgroundColor: isClicking ? activeTheme.bgAlpha : isHovering ? activeTheme.bgAlpha : "transparent",
+            boxShadow: `0 0 ${isClicking ? "20px" : isHovering ? "25px" : "10px"} ${activeTheme.glow}`,
+          }}
         />
       </div>
     </div>

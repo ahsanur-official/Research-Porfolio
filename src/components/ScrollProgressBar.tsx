@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
+import { useTheme } from "../context/ThemeContext";
 
 export function ScrollProgressBar() {
+  const { activeTheme } = useTheme();
   const [scrollProgress, setScrollProgress] = useState(0);
 
   useEffect(() => {
@@ -28,19 +30,18 @@ export function ScrollProgressBar() {
         className="h-full transition-[width] duration-75 ease-out relative"
         style={{
           width: `${scrollProgress}%`,
-          background: `linear-gradient(90deg, 
-            #06b6d4 0%, 
-            #22d3ee 30%, 
-            #38bdf8 60%, 
-            #818cf8 85%, 
-            #c084fc 100%
-          )`,
-          boxShadow: `0 0 12px rgba(6, 182, 212, 0.85), 0 0 4px rgba(34, 211, 238, 0.95)`,
+          background: activeTheme.gradientCss,
+          boxShadow: `0 0 12px ${activeTheme.glow}, 0 0 4px ${activeTheme.hex}`,
         }}
       >
         {/* Leading edge luminous pulse bead */}
         {scrollProgress > 0 && (
-          <div className="absolute right-0 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,1),0_0_14px_rgba(6,182,212,1)]" />
+          <div
+            className="absolute right-0 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-white"
+            style={{
+              boxShadow: `0 0 8px #ffffff, 0 0 14px ${activeTheme.hex}`,
+            }}
+          />
         )}
       </div>
     </div>

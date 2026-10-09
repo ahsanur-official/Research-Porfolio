@@ -15,6 +15,7 @@ import {
   ShieldCheck
 } from "lucide-react";
 import { PUBLICATIONS_DATA, Publication } from "../data/publications";
+import { ReadingTimeBadge } from "./ReadingTimeBadge";
 
 interface ResearchSectionProps {
   researchMode?: boolean;
@@ -53,11 +54,14 @@ export function ResearchSection({ researchMode = false }: ResearchSectionProps) 
       <div className="w-full max-w-[1720px] mx-auto px-3.5 sm:px-6 md:px-8 lg:px-10 xl:px-12">
         {/* Section Header */}
         <div className="max-w-4xl mb-4 sm:mb-5">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/70 border border-cyan-500/50 text-xs font-mono text-cyan-300 mb-2 shadow-[0_0_15px_rgba(6,182,212,0.25)]">
-            <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
-            <span>
-              {researchMode ? "01. Primary Scholarly Works · Peer-Reviewed Focus" : "02. Peer-Reviewed Scholarly Contributions"}
-            </span>
+          <div className="flex flex-wrap items-center gap-2 sm:gap-2.5 mb-2">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/70 border border-cyan-500/50 text-xs font-mono text-cyan-300 shadow-[0_0_15px_rgba(6,182,212,0.25)]">
+              <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
+              <span>
+                {researchMode ? "01. Primary Scholarly Works · Peer-Reviewed Focus" : "02. Peer-Reviewed Scholarly Contributions"}
+              </span>
+            </div>
+            <ReadingTimeBadge time="4 min" wordCount={820} />
           </div>
           <h2 className="font-display text-xl xs:text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-white leading-tight">
             Research & Publications

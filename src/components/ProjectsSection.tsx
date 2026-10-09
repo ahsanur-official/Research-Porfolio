@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Github, ArrowRight } from "lucide-react";
 import { PROJECTS_DATA, ProjectItem, ProjectCategory } from "../data/projects";
 import { ProjectModal } from "./ProjectModal";
+import { ReadingTimeBadge } from "./ReadingTimeBadge";
 
 export function ProjectsSection() {
   const [activeCategory, setActiveCategory] = useState<ProjectCategory>("All");
@@ -34,9 +35,12 @@ export function ProjectsSection() {
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-4 sm:mb-5 gap-3">
           <div className="max-w-2xl">
-            <div className="text-xs font-mono text-cyan-400 uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(6,182,212,0.8)]" />
-              <span>05. Software & Systems Engineering</span>
+            <div className="flex flex-wrap items-center gap-2 sm:gap-2.5 mb-1.5">
+              <div className="text-xs font-mono text-cyan-400 uppercase tracking-widest flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(6,182,212,0.8)]" />
+                <span>05. Software & Systems Engineering</span>
+              </div>
+              <ReadingTimeBadge time="3 min" wordCount={580} />
             </div>
             <h2 className="font-display text-xl xs:text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-white">
               Featured Projects

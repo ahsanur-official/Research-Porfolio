@@ -121,6 +121,25 @@
 }
 
 /* ========================================================
+   Subtle Section Slide-Up Entrance for Mode Transition Flow
+   ======================================================== */
+@keyframes sectionSlideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-section-slide-up {
+  animation: sectionSlideUp 0.42s cubic-bezier(0.16, 1, 0.3, 1) both;
+  will-change: opacity, transform;
+}
+
+/* ========================================================
    Smooth Scroll Entrance (Zero blank gaps during scrolling)
    ======================================================== */
 .reveal-on-scroll {
@@ -145,9 +164,67 @@
 
 /* Reduced motion accessibility */
 @media (prefers-reduced-motion: reduce) {
-  .reveal-on-scroll {
+  .reveal-on-scroll,
+  .animate-section-slide-up {
     opacity: 1 !important;
     transform: none !important;
     transition: none !important;
+    animation: none !important;
   }
 }
+
+/* ========================================================
+   Refined Accent Color Palettes (Subtle, Sophisticated Dark Themes)
+   ======================================================== */
+:root,
+html[data-theme="cyan"] {
+  --color-accent-primary: #06b6d4;
+  --color-accent-light: #22d3ee;
+  --color-accent-lighter: #67e8f9;
+  --color-accent-glow: rgba(6, 182, 212, 0.35);
+}
+
+html[data-theme="titanium"] {
+  --color-accent-primary: #94a3b8;
+  --color-accent-light: #e2e8f0;
+  --color-accent-lighter: #f8fafc;
+  --color-accent-glow: rgba(226, 232, 240, 0.25);
+}
+html[data-theme="titanium"] ::-webkit-scrollbar-thumb:hover {
+  background: #e2e8f0;
+}
+html[data-theme="titanium"] ::selection {
+  background: rgba(226, 232, 240, 0.2);
+  color: #ffffff;
+}
+
+html[data-theme="emerald"] {
+  --color-accent-primary: #059669;
+  --color-accent-light: #10b981;
+  --color-accent-lighter: #6ee7b7;
+  --color-accent-glow: rgba(16, 185, 129, 0.3);
+}
+html[data-theme="emerald"] ::-webkit-scrollbar-thumb:hover {
+  background: #10b981;
+}
+
+html[data-theme="indigo"] {
+  --color-accent-primary: #4f46e5;
+  --color-accent-light: #6366f1;
+  --color-accent-lighter: #a5b4fc;
+  --color-accent-glow: rgba(99, 102, 241, 0.3);
+}
+html[data-theme="indigo"] ::-webkit-scrollbar-thumb:hover {
+  background: #6366f1;
+}
+
+html[data-theme="bronze"] {
+  --color-accent-primary: #d97706;
+  --color-accent-light: #f59e0b;
+  --color-accent-lighter: #fde68a;
+  --color-accent-glow: rgba(245, 158, 11, 0.3);
+}
+html[data-theme="bronze"] ::-webkit-scrollbar-thumb:hover {
+  background: #f59e0b;
+}
+

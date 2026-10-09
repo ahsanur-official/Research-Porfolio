@@ -1,6 +1,7 @@
 import { ArrowDownRight, ArrowRight, Download, Github, Linkedin, Mail, Cpu, Sparkles, BookOpen } from "lucide-react";
 import { PROFILE_DATA } from "../data/profile";
 import { EegOscilloscope } from "./EegOscilloscope";
+import { useTheme } from "../context/ThemeContext";
 
 interface HeroProps {
   onOpenCvModal: () => void;
@@ -9,12 +10,19 @@ interface HeroProps {
 }
 
 export function Hero({ onOpenCvModal, researchMode = false, onToggleResearchMode }: HeroProps) {
+  const { activeTheme } = useTheme();
+
   return (
     <section className={`relative pb-5 sm:pb-8 overflow-hidden ${researchMode ? "pt-6 sm:pt-8" : "pt-20 sm:pt-24"}`}>
-      {/* Colorful ambient glowing backdrops */}
-      <div className="absolute top-1/4 left-1/3 -translate-x-1/2 -translate-y-1/2 w-[950px] h-[450px] bg-gradient-to-tr from-cyan-900/20 via-indigo-900/15 to-purple-900/10 blur-3xl pointer-events-none rounded-full" />
+      {/* Colorful ambient glowing backdrops adapting to theme */}
+      <div
+        className="absolute top-1/4 left-1/3 -translate-x-1/2 -translate-y-1/2 w-[950px] h-[450px] blur-3xl pointer-events-none rounded-full transition-colors duration-700"
+        style={{
+          background: `radial-gradient(circle, ${activeTheme.bgAlpha} 0%, rgba(30, 27, 75, 0.15) 50%, transparent 75%)`,
+        }}
+      />
       <div className="absolute top-10 right-10 w-96 h-96 bg-purple-950/20 blur-3xl pointer-events-none rounded-full" />
-      <div className="absolute bottom-10 left-10 w-80 h-80 bg-emerald-950/20 blur-3xl pointer-events-none rounded-full" />
+      <div className="absolute bottom-10 left-10 w-80 h-80 bg-slate-900/40 blur-3xl pointer-events-none rounded-full" />
 
       {/* Expanded wide container reaching comfortably towards sides */}
       <div className="w-full max-w-[1720px] mx-auto px-3.5 sm:px-6 md:px-8 lg:px-10 xl:px-12 relative z-10">

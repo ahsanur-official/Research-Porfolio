@@ -18,6 +18,7 @@ import { Footer } from "./components/Footer";
 import { CvModal } from "./components/CvModal";
 import { CustomCursor } from "./components/CustomCursor";
 import { ScrollProgressBar } from "./components/ScrollProgressBar";
+import { ThemeSelector } from "./components/ThemeSelector";
 import { useGlobalScrollAnimation } from "./hooks/useGlobalScrollAnimation";
 import { BookOpen, Code2, GraduationCap, Network, FileText, ArrowRight, X } from "lucide-react";
 
@@ -158,92 +159,150 @@ export default function App() {
           onToggleResearchMode={toggleResearchMode}
         />
 
-        {/* Dynamic Section Ordering based on Research Mode */}
-        {researchMode ? (
-          /* ACADEMIC RESEARCH SUPERVISOR EMPHASIS ORDER */
-          <>
-            {/* 1. Research & Publications (Top priority) */}
-            <ResearchSection researchMode={researchMode} />
+        {/* Dynamic Section Ordering based on Research Mode with subtle slide-up entrance */}
+        <div
+          id="main-content-sections"
+          key={researchMode ? "mode-academic-research" : "mode-software-engineering"}
+          className="section-flow-container space-y-0"
+        >
+          {researchMode ? (
+            /* ACADEMIC RESEARCH SUPERVISOR EMPHASIS ORDER */
+            <>
+              {/* 1. Research & Publications (Top priority) */}
+              <div className="animate-section-slide-up" style={{ animationDelay: "0ms" }}>
+                <ResearchSection researchMode={researchMode} />
+              </div>
 
-            {/* 2. Research Interests */}
-            <ResearchInterests />
+              {/* 2. Research Interests */}
+              <div className="animate-section-slide-up" style={{ animationDelay: "50ms" }}>
+                <ResearchInterests />
+              </div>
 
-            {/* 3. Featured Thesis & Pipeline */}
-            <ResearchPipeline />
+              {/* 3. Featured Thesis & Pipeline */}
+              <div className="animate-section-slide-up" style={{ animationDelay: "100ms" }}>
+                <ResearchPipeline />
+              </div>
 
-            {/* 4. Scholastic Foundations & Academic Timeline */}
-            <EducationTimeline />
+              {/* 4. Scholastic Foundations & Academic Timeline */}
+              <div className="animate-section-slide-up" style={{ animationDelay: "150ms" }}>
+                <EducationTimeline />
+              </div>
 
-            {/* 5. About Researcher */}
-            <About />
+              {/* 5. About Researcher */}
+              <div className="animate-section-slide-up" style={{ animationDelay: "200ms" }}>
+                <About />
+              </div>
 
-            {/* 6. Featured Engineering & Scientific Projects */}
-            <ProjectsSection />
+              {/* 6. Featured Engineering & Scientific Projects */}
+              <div className="animate-section-slide-up" style={{ animationDelay: "250ms" }}>
+                <ProjectsSection />
+              </div>
 
-            {/* 7. Technical Skills & Deep Learning Stack */}
-            <SkillsSection />
+              {/* 7. Technical Skills & Deep Learning Stack */}
+              <div className="animate-section-slide-up" style={{ animationDelay: "300ms" }}>
+                <SkillsSection />
+              </div>
 
-            {/* 8. Honors & Achievements */}
-            <AchievementsSection />
+              {/* 8. Honors & Achievements */}
+              <div className="animate-section-slide-up" style={{ animationDelay: "300ms" }}>
+                <AchievementsSection />
+              </div>
 
-            {/* 9. Leadership & Community */}
-            <LeadershipSection />
+              {/* 9. Leadership & Community */}
+              <div className="animate-section-slide-up" style={{ animationDelay: "300ms" }}>
+                <LeadershipSection />
+              </div>
 
-            {/* 10. Certifications */}
-            <CertificationsSection />
+              {/* 10. Certifications */}
+              <div className="animate-section-slide-up" style={{ animationDelay: "300ms" }}>
+                <CertificationsSection />
+              </div>
 
-            {/* 11. Languages (IELTS 6.0) */}
-            <LanguagesSection />
+              {/* 11. Languages (IELTS 6.0) */}
+              <div className="animate-section-slide-up" style={{ animationDelay: "300ms" }}>
+                <LanguagesSection />
+              </div>
 
-            {/* 12. Volunteering */}
-            <VolunteeringSection />
+              {/* 12. Volunteering */}
+              <div className="animate-section-slide-up" style={{ animationDelay: "300ms" }}>
+                <VolunteeringSection />
+              </div>
 
-            {/* 13. Contact & Academic References */}
-            <ContactSection onOpenCvModal={() => setIsCvModalOpen(true)} />
-          </>
-        ) : (
-          /* STANDARD SOFTWARE & AI ENGINEER EMPHASIS ORDER */
-          <>
-            {/* 1. About Me */}
-            <About />
+              {/* 13. Contact & Academic References */}
+              <div className="animate-section-slide-up" style={{ animationDelay: "300ms" }}>
+                <ContactSection onOpenCvModal={() => setIsCvModalOpen(true)} />
+              </div>
+            </>
+          ) : (
+            /* STANDARD SOFTWARE & AI ENGINEER EMPHASIS ORDER */
+            <>
+              {/* 1. About Me */}
+              <div className="animate-section-slide-up" style={{ animationDelay: "0ms" }}>
+                <About />
+              </div>
 
-            {/* 2. Research & Publications */}
-            <ResearchSection researchMode={researchMode} />
+              {/* 2. Research & Publications */}
+              <div className="animate-section-slide-up" style={{ animationDelay: "50ms" }}>
+                <ResearchSection researchMode={researchMode} />
+              </div>
 
-            {/* 3. Research Interests */}
-            <ResearchInterests />
+              {/* 3. Research Interests */}
+              <div className="animate-section-slide-up" style={{ animationDelay: "100ms" }}>
+                <ResearchInterests />
+              </div>
 
-            {/* 4. Featured Thesis & Digital Neural Bypass Pipeline */}
-            <ResearchPipeline />
+              {/* 4. Featured Thesis & Digital Neural Bypass Pipeline */}
+              <div className="animate-section-slide-up" style={{ animationDelay: "150ms" }}>
+                <ResearchPipeline />
+              </div>
 
-            {/* 5. Featured Projects */}
-            <ProjectsSection />
+              {/* 5. Featured Projects */}
+              <div className="animate-section-slide-up" style={{ animationDelay: "200ms" }}>
+                <ProjectsSection />
+              </div>
 
-            {/* 6. Technical Arsenal & Skills */}
-            <SkillsSection />
+              {/* 6. Technical Arsenal & Skills */}
+              <div className="animate-section-slide-up" style={{ animationDelay: "250ms" }}>
+                <SkillsSection />
+              </div>
 
-            {/* 7. Academic Timeline */}
-            <EducationTimeline />
+              {/* 7. Academic Timeline */}
+              <div className="animate-section-slide-up" style={{ animationDelay: "300ms" }}>
+                <EducationTimeline />
+              </div>
 
-            {/* 8. Leadership & Community */}
-            <LeadershipSection />
+              {/* 8. Leadership & Community */}
+              <div className="animate-section-slide-up" style={{ animationDelay: "300ms" }}>
+                <LeadershipSection />
+              </div>
 
-            {/* 9. Honors & Achievements */}
-            <AchievementsSection />
+              {/* 9. Honors & Achievements */}
+              <div className="animate-section-slide-up" style={{ animationDelay: "300ms" }}>
+                <AchievementsSection />
+              </div>
 
-            {/* 10. Certifications */}
-            <CertificationsSection />
+              {/* 10. Certifications */}
+              <div className="animate-section-slide-up" style={{ animationDelay: "300ms" }}>
+                <CertificationsSection />
+              </div>
 
-            {/* 11. Volunteering & Activities */}
-            <VolunteeringSection />
+              {/* 11. Volunteering & Activities */}
+              <div className="animate-section-slide-up" style={{ animationDelay: "300ms" }}>
+                <VolunteeringSection />
+              </div>
 
-            {/* 12. Languages */}
-            <LanguagesSection />
+              {/* 12. Languages */}
+              <div className="animate-section-slide-up" style={{ animationDelay: "300ms" }}>
+                <LanguagesSection />
+              </div>
 
-            {/* 13. Contact & Academic References */}
-            <ContactSection onOpenCvModal={() => setIsCvModalOpen(true)} />
-          </>
-        )}
+              {/* 13. Contact & Academic References */}
+              <div className="animate-section-slide-up" style={{ animationDelay: "300ms" }}>
+                <ContactSection onOpenCvModal={() => setIsCvModalOpen(true)} />
+              </div>
+            </>
+          )}
+        </div>
       </main>
 
       {/* Footer */}
@@ -255,8 +314,10 @@ export default function App() {
         onClose={() => setIsCvModalOpen(false)}
       />
 
-      {/* Floating Mode Toggle Pill for quick switching */}
-      <div className="fixed bottom-4 right-3.5 sm:bottom-5 sm:right-5 z-40">
+      {/* Floating Controls: Theme Selector & Mode Toggle Pill */}
+      <div className="fixed bottom-4 right-3.5 sm:bottom-5 sm:right-5 z-40 flex items-center gap-2">
+        <ThemeSelector variant="compact" />
+
         <button
           onClick={toggleResearchMode}
           className={`flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-full text-[11px] sm:text-xs font-mono font-semibold shadow-2xl border transition-all active:scale-95 cursor-pointer ${
@@ -270,12 +331,14 @@ export default function App() {
           {researchMode ? (
             <>
               <BookOpen className="w-3.5 h-3.5" />
-              <span>Research Mode Active</span>
+              <span className="hidden xs:inline">Research Mode Active</span>
+              <span className="xs:hidden">Research</span>
             </>
           ) : (
             <>
               <Code2 className="w-3.5 h-3.5 text-cyan-400" />
-              <span>Switch to Research View</span>
+              <span className="hidden xs:inline">Switch to Research View</span>
+              <span className="xs:hidden">Research View</span>
             </>
           )}
         </button>

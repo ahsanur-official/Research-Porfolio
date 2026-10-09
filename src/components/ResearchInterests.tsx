@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Brain, Activity, Cpu, Sparkles, Network, RefreshCw, HeartPulse, Zap, Stethoscope, Layers } from "lucide-react";
 import { RESEARCH_INTERESTS } from "../data/research";
+import { ReadingTimeBadge } from "./ReadingTimeBadge";
 
 export function ResearchInterests() {
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
@@ -48,9 +49,12 @@ export function ResearchInterests() {
       <div className="w-full max-w-[1720px] mx-auto px-3.5 sm:px-6 md:px-8 lg:px-10 xl:px-12">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-4 sm:mb-5 gap-2">
           <div>
-            <div className="text-xs font-mono text-cyan-400 uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(6,182,212,0.8)]" />
-              <span>03. Scientific Inquiry & Neuroengineering</span>
+            <div className="flex flex-wrap items-center gap-2 sm:gap-2.5 mb-1.5">
+              <div className="text-xs font-mono text-cyan-400 uppercase tracking-widest flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(6,182,212,0.8)]" />
+                <span>03. Scientific Inquiry & Neuroengineering</span>
+              </div>
+              <ReadingTimeBadge time="2 min" wordCount={390} />
             </div>
             <h2 className="font-display text-xl xs:text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-white">
               Research Interests
