@@ -21,8 +21,33 @@ import { ScrollProgressBar } from "./components/ScrollProgressBar";
 import { ThemeSelector } from "./components/ThemeSelector";
 import { useGlobalScrollAnimation } from "./hooks/useGlobalScrollAnimation";
 import { BookOpen, Code2, GraduationCap, Network, FileText, ArrowRight, X } from "lucide-react";
+import { AdminPortal } from "./admin/AdminPortal";
 
 export default function App() {
+  // Private Owner Portal Route (Only activated when explicit ?admin or #admin is entered, 100% invisible on public site)
+  const [isAdminPortal, setIsAdminPortal] = useState<boolean>(() => {
+    if (typeof window !== "undefined") {
+      const search = window.location.search.toLowerCase();
+      const hash = window.location.hash.toLowerCase();
+      return search.includes("admin") || hash === "#admin";
+    }
+    return false;
+  });
+
+  useEffect(() => {
+    const handleUrlChange = () => {
+      const search = window.location.search.toLowerCase();
+      const hash = window.location.hash.toLowerCase();
+      setIsAdminPortal(search.includes("admin") || hash === "#admin");
+    };
+    window.addEventListener("popstate", handleUrlChange);
+    window.addEventListener("hashchange", handleUrlChange);
+    return () => {
+      window.removeEventListener("popstate", handleUrlChange);
+      window.removeEventListener("hashchange", handleUrlChange);
+    };
+  }, []);
+
   // Initialize state with persistence from URL search params & localStorage
   const [researchMode, setResearchMode] = useState<boolean>(() => {
     if (typeof window !== "undefined") {
@@ -39,6 +64,10 @@ export default function App() {
 
   // Initialize global scroll reveal animations for all sections and cards
   useGlobalScrollAnimation(researchMode);
+
+  if (isAdminPortal) {
+    return <AdminPortal />;
+  }
 
   // Sync state to URL and localStorage
   const setModeExplicitly = useCallback((enable: boolean) => {

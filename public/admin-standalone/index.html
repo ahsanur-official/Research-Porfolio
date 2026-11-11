@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Private Communications Portal — Md. Ahsanur Rahaman</title>
+  <meta name="robots" content="noindex, nofollow">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { background-color: #060911; color: #f1f5f9; font-family: 'Plus Jakarta Sans', sans-serif; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+  <!-- App Container -->
+  <div id="app" class="flex-1 flex flex-col"></div>
+
+  <script>
+    const DEFAULT_PIN = "2456";
+    let state = {
+      auth: sessionStorage.getItem("ahsanur_admin_auth") === "true",
+      messages: [],
+      search: "",
+      activeId: null,
+      pinInput: "",
+      pinError: false
+    };
+
+    function loadData() {
+      try {
+        const raw = localStorage.getItem("ahsanur_portfolio_inbox");
+        state.messages = raw ? JSON.parse(raw) : [];
+        if (state.messages.length > 0 && !state.activeId) {
+          state.activeId = state.messages[0].id;
+        }
+      } catch (e) {
+        state.messages = [];
+      }
+    }
+
+    function saveData(msgs) {
+      state.messages = msgs;
+      localStorage.setItem("ahsanur_portfolio_inbox", JSON.stringify(msgs));
+      render();
+    }
+
+    function checkPin(e) {
+      e.preventDefault();
+      if (state.pinInput.trim() === DEFAULT_PIN) {
+        state.auth = true;
+        sessionStorage.setItem("ahsanur_admin_auth", "true");
+        state.pinError = false;
+        loadData();
+      } else {
+        state.pinError = true;
+      }
+      render();
+    }
+
+    function logout() {
+      state.auth = false;
+      sessionStorage.removeItem("ahsanur_admin_auth");
+      render();
+    }
+
+    function deleteMsg(id) {
+      if (confirm("Delete this message?")) {
+        const remaining = state.messages.filter(m => m.id !== id);
+        if (state.activeId === id) {
+          state.activeId = remaining.length > 0 ? remaining[0].id : null;
+        }
+        saveData(remaining);
+      }
+    }
+
+    function clearAll() {
+      if (confirm("Are you sure you want to clear all messages permanently?")) {
+        state.activeId = null;
+        saveData([]);
+      }
+    }
+
+    function exportJson() {
+      const blob = new Blob([JSON.stringify(state.messages, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `ahsanur_inbox_backup_${new Date().toISOString().slice(0, 10)}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function importJson(input) {
+      const file = input.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const list = JSON.parse(e.target.result);
+          if (Array.isArray(list)) {
+            saveData(list);
+            alert(`Successfully imported ${list.length} messages.`);
+          } else {
+            alert("Invalid JSON format.");
+          }
+        } catch {
+          alert("Error reading JSON file.");
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function render() {
+      const app = document.getElementById("app");
+      if (!state.auth) {
+        app.innerHTML = `
+          <div class="flex-1 flex items-center justify-center p-4">
+            <div class="w-full max-w-md p-6 sm:p-8 rounded-2xl border border-cyan-800/50 bg-[#0b1222] shadow-2xl text-center space-y-5">
+              <div class="w-14 h-14 rounded-2xl bg-cyan-500/10 border border-cyan-400/50 flex items-center justify-center mx-auto text-cyan-400 text-2xl font-bold">
+                🔒
+              </div>
+              <div>
+                <h1 class="text-2xl font-bold text-white tracking-tight">Owner Authentication</h1>
+                <p class="text-xs text-slate-400 mt-1">Enter your private security PIN to access inquiries.</p>
+              </div>
+              <form onsubmit="checkPin(event)" class="space-y-4">
+                <input
+                  type="password"
+                  required
+                  placeholder="••••"
+                  value="${state.pinInput}"
+                  oninput="state.pinInput = this.value; state.pinError = false;"
+                  class="w-full px-4 py-2.5 rounded-xl bg-slate-950 border ${state.pinError ? 'border-rose-500' : 'border-slate-700'} text-white placeholder-slate-600 focus:outline-none focus:border-cyan-400 text-center tracking-widest text-lg font-mono font-bold"
+                />
+                ${state.pinError ? '<p class="text-xs text-rose-400 font-mono">Invalid PIN. (Default: 2456)</p>' : ''}
+                <button type="submit" class="w-full py-2.5 rounded-xl text-sm font-semibold bg-gradient-to-r from-cyan-400 to-sky-400 text-slate-950 hover:from-cyan-300 hover:to-sky-300 font-sans shadow-md cursor-pointer">
+                  Unlock Inquiries
+                </button>
+              </form>
+              <div class="pt-2 border-t border-slate-800 text-[11px] font-mono text-slate-500">
+                Private Admin Web · Hidden from public visitors
+              </div>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      const q = state.search.toLowerCase();
+      const filtered = state.messages.filter(m =>
+        m.name.toLowerCase().includes(q) ||
+        m.email.toLowerCase().includes(q) ||
+        m.subject.toLowerCase().includes(q) ||
+        m.message.toLowerCase().includes(q)
+      );
+
+      const active = state.messages.find(m => m.id === state.activeId) || filtered[0] || null;
+
+      app.innerHTML = `
+        <header class="border-b border-slate-800 bg-[#080d1a] py-3.5 px-4 sm:px-8">
+          <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-cyan-400"></span>
+              <span class="text-sm font-bold text-white">Md. Ahsanur Rahaman</span>
+              <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-cyan-950 text-cyan-300 border border-cyan-800">Private Portal</span>
+            </div>
+            <button onclick="logout()" class="px-3 py-1.5 rounded-lg bg-rose-950/40 border border-rose-900/60 text-rose-300 hover:bg-rose-900/50 text-xs font-mono cursor-pointer">
+              Lock Portal
+            </button>
+          </div>
+        </header>
+
+        <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 space-y-4">
+          <!-- Toolbar -->
+          <div class="p-3 sm:p-4 rounded-xl bg-[#080d1a] border border-slate-800 flex flex-wrap items-center justify-between gap-3">
+            <input
+              type="text"
+              placeholder="Search inquiries..."
+              value="${state.search}"
+              oninput="state.search = this.value; render();"
+              class="px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-700 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 min-w-[200px]"
+            />
+            <div class="flex flex-wrap items-center gap-2 text-xs font-mono">
+              <button onclick="loadData(); render();" class="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-slate-300 hover:text-white cursor-pointer">
+                Refresh (${state.messages.length})
+              </button>
+              <button onclick="exportJson()" ${state.messages.length === 0 ? 'disabled' : ''} class="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-slate-300 hover:text-white disabled:opacity-40 cursor-pointer">
+                Export JSON
+              </button>
+              <label class="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-slate-300 hover:text-white cursor-pointer">
+                Import JSON
+                <input type="file" accept=".json" onchange="importJson(this)" class="hidden" />
+              </label>
+              ${state.messages.length > 0 ? `
+                <button onclick="clearAll()" class="px-3 py-1.5 rounded-lg bg-rose-950/40 border border-rose-900 text-rose-400 hover:bg-rose-900/50 cursor-pointer">
+                  Clear All
+                </button>
+              ` : ''}
+            </div>
+          </div>
+
+          <!-- Split View -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 min-h-[500px]">
+            <!-- List -->
+            <div class="lg:col-span-5 rounded-xl border border-slate-800 bg-[#080d1a] overflow-hidden flex flex-col max-h-[650px]">
+              <div class="p-3 border-b border-slate-800 bg-[#060912] text-xs font-mono text-slate-400">
+                Inquiries (${filtered.length})
+              </div>
+              <div class="flex-1 overflow-y-auto p-2 space-y-1.5">
+                ${filtered.length === 0 ? `
+                  <div class="py-16 text-center text-slate-500 text-xs">
+                    No inquiries in inbox yet.
+                  </div>
+                ` : filtered.map(m => `
+                  <div onclick="state.activeId = '${m.id}'; render();" class="p-3 rounded-lg cursor-pointer ${m.id === state.activeId ? 'bg-cyan-950/70 border border-cyan-500/50' : 'bg-slate-900/50 hover:bg-slate-900'}">
+                    <div class="flex items-center justify-between">
+                      <span class="font-bold text-sm text-white">${m.name}</span>
+                      <span class="text-[10px] font-mono text-slate-500">${m.timestamp.split(',')[0]}</span>
+                    </div>
+                    <div class="text-xs text-cyan-300 truncate mt-0.5">${m.subject}</div>
+                    <div class="text-xs text-slate-400 truncate mt-1">${m.message}</div>
+                    <div class="text-[10px] font-mono text-slate-500 mt-1">${m.wordCount} words · &lt;${m.email}&gt;</div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+
+            <!-- Detail Pane -->
+            <div class="lg:col-span-7 rounded-xl border border-slate-800 bg-[#080d1a] overflow-hidden flex flex-col max-h-[650px]">
+              ${active ? `
+                <div class="p-4 border-b border-slate-800 bg-[#060912] space-y-2">
+                  <div class="flex items-start justify-between gap-3">
+                    <div>
+                      <h2 class="text-base font-bold text-white">${active.subject}</h2>
+                      <div class="text-xs text-slate-300 mt-1">From: <strong>${active.name}</strong> &lt;${active.email}&gt;</div>
+                    </div>
+                    <button onclick="deleteMsg('${active.id}')" class="px-2.5 py-1 rounded bg-rose-950/40 border border-rose-900 text-rose-400 text-xs cursor-pointer">
+                      Delete
+                    </button>
+                  </div>
+                  <div class="text-[11px] font-mono text-slate-500 pt-1 border-t border-slate-800 flex justify-between">
+                    <span>${active.timestamp}</span>
+                    <span>${active.wordCount} words</span>
+                  </div>
+                </div>
+                <div class="p-5 flex-1 overflow-y-auto space-y-4">
+                  <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 text-sm text-slate-200 whitespace-pre-wrap leading-relaxed">
+                    ${active.message}
+                  </div>
+                  <div class="p-4 rounded-xl bg-cyan-950/30 border border-cyan-800/40 space-y-2">
+                    <div class="text-xs font-bold text-white">Direct Gmail Reply:</div>
+                    <a
+                      href="mailto:${active.email}?subject=Re: ${encodeURIComponent(active.subject)}&body=Dear ${encodeURIComponent(active.name)},%0D%0A%0D%0AThank you for reaching out.%0D%0A%0D%0ABest regards,%0D%0AMd. Ahsanur Rahaman"
+                      class="inline-block px-4 py-2 rounded-lg bg-gradient-to-r from-cyan-400 to-sky-400 text-slate-950 text-xs font-semibold shadow cursor-pointer"
+                    >
+                      Reply to ${active.name} (${active.email})
+                    </a>
+                  </div>
+                </div>
+              ` : `
+                <div class="flex-1 flex items-center justify-center p-8 text-slate-500 text-xs">
+                  Select an inquiry on the left to read.
+                </div>
+              `}
+            </div>
+          </div>
+        </main>
+      `;
+    }
+
+    if (state.auth) {
+      loadData();
+    }
+    render();
+  </script>
+</body>
+</html>
