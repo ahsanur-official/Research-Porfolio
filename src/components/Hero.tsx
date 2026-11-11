@@ -43,15 +43,6 @@ export function Hero({ onOpenCvModal, researchMode = false, onToggleResearchMode
                 <span className="text-slate-300">Pundra University</span>
                 <span aria-hidden="true" className="text-slate-600">·</span>
                 <span className="text-cyan-300 font-bold">CGPA 3.83</span>
-                {onToggleResearchMode && (
-                  <button
-                    onClick={onToggleResearchMode}
-                    className="ml-auto hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-mono border border-slate-700 bg-slate-900/90 hover:border-cyan-500/50 text-slate-300 hover:text-white transition-colors cursor-pointer"
-                  >
-                    <span>{researchMode ? "Mode: Research" : "Mode: Engineering"}</span>
-                    <span className="text-cyan-400 text-[9px] underline">Switch</span>
-                  </button>
-                )}
               </div>
 
               {/* Primary Name Display */}
@@ -121,10 +112,10 @@ export function Hero({ onOpenCvModal, researchMode = false, onToggleResearchMode
                     <div className="text-[9px] sm:text-[10px] text-cyan-400/80 font-mono mt-0.5">CGPA / 4.00</div>
                   </div>
 
-                  {/* Accepted Papers Box: Emerald */}
+                  {/* Research Papers Metric Box: Emerald */}
                   <div className="p-1.5 sm:p-2 rounded-xl bg-gradient-to-br from-emerald-950/60 to-slate-950 border border-emerald-500/50 shadow-[0_0_12px_rgba(16,185,129,0.18)]">
-                    <div className="text-xs sm:text-sm md:text-base font-mono font-extrabold text-emerald-300">2 Conf.</div>
-                    <div className="text-[9px] sm:text-[10px] text-emerald-400/80 font-mono mt-0.5">Accepted 2026</div>
+                    <div className="text-xs sm:text-sm md:text-base font-mono font-extrabold text-emerald-300">04</div>
+                    <div className="text-[9px] sm:text-[10px] text-emerald-400/80 font-mono mt-0.5">Research Papers</div>
                   </div>
 
                   {/* IELTS Box: Indigo */}
@@ -144,7 +135,7 @@ export function Hero({ onOpenCvModal, researchMode = false, onToggleResearchMode
                   className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-gradient-to-r from-cyan-400 to-sky-400 text-slate-950 hover:from-cyan-300 hover:to-sky-300 shadow-[0_0_20px_rgba(6,182,212,0.3)] transition-all active:scale-[0.98] w-full sm:w-auto text-center cursor-pointer"
                 >
                   <BookOpen className="w-4 h-4 shrink-0" />
-                  <span>{researchMode ? "Explore 3 Research Papers (2 Accepted)" : "Explore Research Papers"}</span>
+                  <span>{researchMode ? "Explore Research & Publications" : "Explore Research Papers"}</span>
                   <ArrowRight className="w-4 h-4 shrink-0" />
                 </a>
 

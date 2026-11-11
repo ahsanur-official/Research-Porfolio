@@ -105,7 +105,7 @@ export default function App() {
                 ACADEMIC & RESEARCH VIEW ACTIVE
               </span>
               <span className="text-slate-300 font-medium text-[11px] sm:text-xs">
-                Prioritizing 3 Peer-Reviewed Papers, Neural Bypass Pipeline & Academic Credentials
+                Prioritizing IEEE Scopus-Indexed CycleGAN Research, Neural Bypass Pipeline & Academic Credentials
               </span>
             </div>
 

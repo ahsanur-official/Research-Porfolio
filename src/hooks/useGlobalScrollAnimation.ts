@@ -17,23 +17,20 @@ export function useGlobalScrollAnimation(dependency?: any) {
         });
       },
       {
-        threshold: 0.02,
-        rootMargin: "0px 0px 120px 0px", // Pre-reveals before viewport edge to prevent blank gaps
+        threshold: 0.01,
+        rootMargin: "0px 0px 240px 0px", // Generous pre-render threshold for buttery 120fps scrolling
       }
     );
 
-    // Target content cards and interactive items for smooth revelation without blank gaps
+    // Target content cards and interactive items
     const elementsToAnimate = document.querySelectorAll<HTMLElement>(
       "section, article, .interactive-card"
     );
 
     elementsToAnimate.forEach((el, index) => {
-      if (el.dataset.scrollProcessed) return;
-      el.dataset.scrollProcessed = "true";
-
       // If already within or close to initial viewport, reveal immediately
       const rect = el.getBoundingClientRect();
-      if (rect.top < window.innerHeight * 1.15 && rect.bottom > 0) {
+      if (rect.top < window.innerHeight * 1.25 && rect.bottom > -50) {
         el.classList.add("reveal-on-scroll", "is-revealed");
       } else {
         el.classList.add("reveal-on-scroll");

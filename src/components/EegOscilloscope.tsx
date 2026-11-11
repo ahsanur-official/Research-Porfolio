@@ -188,9 +188,34 @@ export function EegOscilloscope() {
       }
     };
 
-    const loop = () => {
+    let isElementInView = true;
+    let observer: IntersectionObserver | null = null;
+    if (typeof IntersectionObserver !== "undefined") {
+      observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          isElementInView = entry.isIntersecting;
+          if (isElementInView && !animationFrameIdRef.current) {
+            lastTime = performance.now();
+            animationFrameIdRef.current = requestAnimationFrame(loop);
+          }
+        });
+      }, { threshold: 0.05 });
+      observer.observe(container);
+    }
+
+    let lastTime = performance.now();
+    const loop = (currentTime: number) => {
+      if (!isElementInView) {
+        animationFrameIdRef.current = null;
+        return;
+      }
+
+      const dt = Math.min((currentTime - lastTime) / 1000, 0.1);
+      lastTime = currentTime;
+
       if (isPlaying) {
-        timeOffsetRef.current += 2.2;
+        // Normalized 60-120fps delta time: 2.2 pixels per 16.6ms frame
+        timeOffsetRef.current += dt * 132;
       }
       render();
       animationFrameIdRef.current = requestAnimationFrame(loop);
@@ -203,6 +228,9 @@ export function EegOscilloscope() {
         resizeObserver.disconnect();
       } else {
         window.removeEventListener("resize", handleResize);
+      }
+      if (observer) {
+        observer.disconnect();
       }
       if (animationFrameIdRef.current) {
         cancelAnimationFrame(animationFrameIdRef.current);

@@ -22,7 +22,7 @@ interface ResearchSectionProps {
 }
 
 export function ResearchSection({ researchMode = false }: ResearchSectionProps) {
-  const [expandedId, setExpandedId] = useState<string | null>("ricrf-2026-cyclegan");
+  const [expandedId, setExpandedId] = useState<string | null>("ieee-csde-2026-cyclegan");
   const [copiedBibtexId, setCopiedBibtexId] = useState<string | null>(null);
   const [copiedCitationId, setCopiedCitationId] = useState<string | null>(null);
   const [activeFilter, setActiveFilter] = useState<"all" | "accepted" | "cyclegan" | "diffusion">("all");
@@ -61,7 +61,7 @@ export function ResearchSection({ researchMode = false }: ResearchSectionProps) 
                 {researchMode ? "01. Primary Scholarly Works · Peer-Reviewed Focus" : "02. Peer-Reviewed Scholarly Contributions"}
               </span>
             </div>
-            <ReadingTimeBadge time="4 min" wordCount={820} />
+            <ReadingTimeBadge time="3.5 min" wordCount={680} />
           </div>
           <h2 className="font-display text-xl xs:text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-white leading-tight">
             Research & Publications
@@ -80,14 +80,6 @@ export function ResearchSection({ researchMode = false }: ResearchSectionProps) 
               </div>
             </div>
 
-            <div className="p-2 sm:p-2.5 rounded-xl bg-slate-900/90 border border-cyan-500/40 text-cyan-300 flex items-center gap-2 shadow-sm">
-              <CheckCircle className="w-4 h-4 text-cyan-400 shrink-0" />
-              <div className="min-w-0">
-                <div className="font-bold text-[11px] truncate">RICRF 2026</div>
-                <div className="text-[10px] text-slate-400 truncate">Accepted Conference</div>
-              </div>
-            </div>
-
             <div className="p-2 sm:p-2.5 rounded-xl bg-slate-900/90 border border-amber-500/40 text-amber-300 flex items-center gap-2 shadow-sm">
               <Clock className="w-4 h-4 text-amber-400 shrink-0" />
               <div className="min-w-0">
@@ -96,11 +88,19 @@ export function ResearchSection({ researchMode = false }: ResearchSectionProps) 
               </div>
             </div>
 
-            <div className="p-2 sm:p-2.5 rounded-xl bg-slate-900/90 border border-indigo-500/40 text-indigo-300 flex items-center gap-2 shadow-sm">
-              <ShieldCheck className="w-4 h-4 text-indigo-400 shrink-0" />
+            <div className="p-2 sm:p-2.5 rounded-xl bg-slate-900/90 border border-cyan-500/40 text-cyan-300 flex items-center gap-2 shadow-sm">
+              <ShieldCheck className="w-4 h-4 text-cyan-400 shrink-0" />
               <div className="min-w-0">
                 <div className="font-bold text-[11px] truncate">180 Holdout Pairs</div>
                 <div className="text-[10px] text-slate-400 truncate">Patient-Level Validation</div>
+              </div>
+            </div>
+
+            <div className="p-2 sm:p-2.5 rounded-xl bg-slate-900/90 border border-indigo-500/40 text-indigo-300 flex items-center gap-2 shadow-sm">
+              <Award className="w-4 h-4 text-indigo-400 shrink-0" />
+              <div className="min-w-0">
+                <div className="font-bold text-[11px] truncate">OpenNeuro ds008768</div>
+                <div className="text-[10px] text-slate-400 truncate">282 Clinical Records</div>
               </div>
             </div>
           </div>
@@ -129,7 +129,7 @@ export function ResearchSection({ researchMode = false }: ResearchSectionProps) 
                   : "bg-slate-900/80 border-slate-800 text-slate-400 hover:text-white hover:border-slate-700"
               }`}
             >
-              Accepted Papers (2)
+              Accepted ({PUBLICATIONS_DATA.filter(p => p.status === "Accepted").length})
             </button>
             <button
               onClick={() => setActiveFilter("cyclegan")}
@@ -139,7 +139,7 @@ export function ResearchSection({ researchMode = false }: ResearchSectionProps) 
                   : "bg-slate-900/80 border-slate-800 text-slate-400 hover:text-white hover:border-slate-700"
               }`}
             >
-              CycleGAN & BCI (2)
+              CycleGAN & BCI ({PUBLICATIONS_DATA.filter(p => p.tags.includes("CycleGAN") || p.title.includes("CycleGAN")).length})
             </button>
             <button
               onClick={() => setActiveFilter("diffusion")}
@@ -149,7 +149,7 @@ export function ResearchSection({ researchMode = false }: ResearchSectionProps) 
                   : "bg-slate-900/80 border-slate-800 text-slate-400 hover:text-white hover:border-slate-700"
               }`}
             >
-              Diffusion & PD (1)
+              Diffusion & PD ({PUBLICATIONS_DATA.filter(p => p.tags.includes("Diffusion Models") || p.title.includes("Diffusion")).length})
             </button>
           </div>
         </div>
@@ -163,8 +163,6 @@ export function ResearchSection({ researchMode = false }: ResearchSectionProps) 
             const cardTheme =
               index === 0
                 ? "border-cyan-500/50 bg-gradient-to-br from-slate-900/95 via-cyan-950/25 to-slate-900/90 shadow-[0_0_30px_rgba(6,182,212,0.18)] hover:border-cyan-400"
-                : index === 1
-                ? "border-emerald-500/50 bg-gradient-to-br from-slate-900/95 via-emerald-950/25 to-slate-900/90 shadow-[0_0_30px_rgba(16,185,129,0.18)] hover:border-emerald-400"
                 : "border-purple-500/50 bg-gradient-to-br from-slate-900/95 via-purple-950/25 to-slate-900/90 shadow-[0_0_30px_rgba(168,85,247,0.18)] hover:border-purple-400";
 
             return (
@@ -213,9 +211,16 @@ export function ResearchSection({ researchMode = false }: ResearchSectionProps) 
                     "{pub.title}."
                   </h3>
 
-                  {/* Venue Full Name */}
-                  <div className="text-xs sm:text-sm font-mono text-cyan-300/90 font-medium">
-                    {pub.venueFull}
+                  {/* Venue Full Name + Ethics Note */}
+                  <div className="space-y-1">
+                    <div className="text-xs sm:text-sm font-mono text-cyan-300/90 font-medium">
+                      {pub.venueFull}
+                    </div>
+                    {pub.note && (
+                      <div className="text-[11px] font-mono text-emerald-300/90 bg-emerald-950/50 border border-emerald-500/40 px-2.5 py-1 rounded-md inline-block">
+                        {pub.note}
+                      </div>
+                    )}
                   </div>
 
                   {/* Authors row */}

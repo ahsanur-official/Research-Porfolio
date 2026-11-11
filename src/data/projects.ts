@@ -47,7 +47,7 @@ export const PROJECTS_DATA: ProjectItem[] = [
     technologies: ["NASA Open Datasets", "JavaScript", "HTML5 Canvas", "Spatial Algorithms", "CSS3"],
     myContribution:
       "Architected core routing graph algorithms, integrated NASA orbital telemetry coordinates, designed the dark interplanetary mission control interface.",
-    year: 2026,
+    year: 2025,
     featured: true,
     githubUrl: "https://github.com/ahsanur-official/Interplanetary-Survival-Guide-Martian-Map",
     image: "/assets/images/marsway_mission_map_1791200571783.jpg"

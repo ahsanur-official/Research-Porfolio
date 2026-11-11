@@ -1,14 +1,20 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTheme } from "../context/ThemeContext";
 
 export function CustomCursor() {
   const { activeTheme } = useTheme();
-  const [position, setPosition] = useState({ x: -100, y: -100 });
-  const [trailingPos, setTrailingPos] = useState({ x: -100, y: -100 });
   const [isHovering, setIsHovering] = useState(false);
   const [isClicking, setIsClicking] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [isTouchDevice, setIsTouchDevice] = useState(true);
+
+  const dotRef = useRef<HTMLDivElement | null>(null);
+  const auraRef = useRef<HTMLDivElement | null>(null);
+
+  // High-frequency coordinates tracked via refs for pure 120fps compositor updates
+  const mousePos = useRef({ x: -100, y: -100 });
+  const trailPos = useRef({ x: -100, y: -100 });
+  const rafId = useRef<number | null>(null);
 
   useEffect(() => {
     // Only enable custom cursor on non-touch desktop devices with fine pointer
@@ -22,38 +28,30 @@ export function CustomCursor() {
     };
 
     checkTouch();
-    window.addEventListener("resize", checkTouch);
+    window.addEventListener("resize", checkTouch, { passive: true });
 
     if (isTouchDevice) {
       return () => window.removeEventListener("resize", checkTouch);
     }
 
     const handleMouseMove = (e: MouseEvent) => {
-      setPosition({ x: e.clientX, y: e.clientY });
+      mousePos.current.x = e.clientX;
+      mousePos.current.y = e.clientY;
       if (!isVisible) setIsVisible(true);
+    };
 
+    // Use event delegation on pointerover/pointerout for lightweight hover detection (no target.closest on every subpixel tick)
+    const handlePointerOver = (e: MouseEvent) => {
       const target = e.target as HTMLElement | null;
-      if (target) {
-        const isInteractive = Boolean(
-          target.tagName === "BUTTON" ||
-          target.tagName === "A" ||
-          target.tagName === "SELECT" ||
-          target.tagName === "SUMMARY" ||
-          target.closest("button") ||
-          target.closest("a") ||
-          target.closest("nav") ||
-          target.closest("aside") ||
-          target.closest(".interactive-card") ||
-          target.closest("[role='button']") ||
-          target.closest("[role='tab']") ||
-          target.closest("[role='menuitem']") ||
-          target.closest("[role='link']") ||
-          target.classList.contains("cursor-pointer")
-        );
-        setIsHovering(isInteractive);
-      } else {
-        setIsHovering(false);
-      }
+      if (!target) return;
+      const isInteractive = Boolean(
+        target.tagName === "BUTTON" ||
+        target.tagName === "A" ||
+        target.tagName === "SELECT" ||
+        target.tagName === "SUMMARY" ||
+        target.closest("button, a, nav, [role='button'], [role='tab'], .interactive-card, .cursor-pointer")
+      );
+      setIsHovering(isInteractive);
     };
 
     const handleMouseDown = () => setIsClicking(true);
@@ -62,14 +60,40 @@ export function CustomCursor() {
     const handleMouseEnter = () => setIsVisible(true);
 
     window.addEventListener("mousemove", handleMouseMove, { passive: true });
-    window.addEventListener("mousedown", handleMouseDown);
-    window.addEventListener("mouseup", handleMouseUp);
-    document.addEventListener("mouseleave", handleMouseLeave);
-    document.addEventListener("mouseenter", handleMouseEnter);
+    window.addEventListener("pointerover", handlePointerOver, { passive: true });
+    window.addEventListener("mousedown", handleMouseDown, { passive: true });
+    window.addEventListener("mouseup", handleMouseUp, { passive: true });
+    document.addEventListener("mouseleave", handleMouseLeave, { passive: true });
+    document.addEventListener("mouseenter", handleMouseEnter, { passive: true });
+
+    // 120fps hardware-accelerated render loop bypassing React re-renders
+    let lastTime = performance.now();
+    const renderLoop = (currentTime: number) => {
+      const dt = Math.min((currentTime - lastTime) / 1000, 0.1);
+      lastTime = currentTime;
+
+      // Frame-rate independent lerp factor targeting silky response across 60Hz/120Hz/144Hz displays
+      const lerpFactor = 1 - Math.exp(-22 * dt);
+      trailPos.current.x += (mousePos.current.x - trailPos.current.x) * lerpFactor;
+      trailPos.current.y += (mousePos.current.y - trailPos.current.y) * lerpFactor;
+
+      if (dotRef.current) {
+        dotRef.current.style.transform = `translate3d(${mousePos.current.x}px, ${mousePos.current.y}px, 0)`;
+      }
+      if (auraRef.current) {
+        auraRef.current.style.transform = `translate3d(${trailPos.current.x}px, ${trailPos.current.y}px, 0)`;
+      }
+
+      rafId.current = requestAnimationFrame(renderLoop);
+    };
+
+    rafId.current = requestAnimationFrame(renderLoop);
 
     return () => {
+      if (rafId.current) cancelAnimationFrame(rafId.current);
       window.removeEventListener("resize", checkTouch);
       window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("pointerover", handlePointerOver);
       window.removeEventListener("mousedown", handleMouseDown);
       window.removeEventListener("mouseup", handleMouseUp);
       document.removeEventListener("mouseleave", handleMouseLeave);
@@ -77,32 +101,16 @@ export function CustomCursor() {
     };
   }, [isVisible, isTouchDevice]);
 
-  // Smooth trailing cursor animation loop
-  useEffect(() => {
-    if (isTouchDevice) return;
-
-    let animationFrameId: number;
-    const animateTrail = () => {
-      setTrailingPos((prev) => ({
-        x: prev.x + (position.x - prev.x) * 0.25,
-        y: prev.y + (position.y - prev.y) * 0.25,
-      }));
-      animationFrameId = requestAnimationFrame(animateTrail);
-    };
-
-    animationFrameId = requestAnimationFrame(animateTrail);
-    return () => cancelAnimationFrame(animationFrameId);
-  }, [position, isTouchDevice]);
-
   if (isTouchDevice || !isVisible) return null;
 
   return (
-    <div className="hidden lg:block">
-      {/* Precision Core Dot */}
+    <div className="hidden lg:block pointer-events-none">
+      {/* Precision Core Dot - directly manipulated via GPU translate3d */}
       <div
+        ref={dotRef}
         className="fixed top-0 left-0 pointer-events-none z-[9999] -translate-x-1/2 -translate-y-1/2 will-change-transform"
         style={{
-          transform: `translate3d(${position.x}px, ${position.y}px, 0)`,
+          transform: `translate3d(${mousePos.current.x}px, ${mousePos.current.y}px, 0)`,
         }}
       >
         <div
@@ -120,11 +128,12 @@ export function CustomCursor() {
         />
       </div>
 
-      {/* Outer Atmospheric Aura Ring */}
+      {/* Outer Atmospheric Aura Ring - frame-independent lerp */}
       <div
+        ref={auraRef}
         className="fixed top-0 left-0 pointer-events-none z-[9998] -translate-x-1/2 -translate-y-1/2 will-change-transform"
         style={{
-          transform: `translate3d(${trailingPos.x}px, ${trailingPos.y}px, 0)`,
+          transform: `translate3d(${trailPos.current.x}px, ${trailPos.current.y}px, 0)`,
         }}
       >
         <div

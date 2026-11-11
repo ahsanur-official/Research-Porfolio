@@ -84,6 +84,13 @@ export const LEADERSHIP_ROLES: LeadershipRole[] = [
 
 export const ACHIEVEMENTS: AchievementItem[] = [
   {
+    year: 2026,
+    title: "Hackathon Champion",
+    organization: "CSE FEST 2026 | Department of CSE, Pundra University",
+    category: "Hackathon & Problem Solving",
+    description: "Champion (1st Place) in the flagship Inter-University / Departmental Hackathon at CSE FEST 2026, developing an innovative, high-impact software system under rigorous competitive judging."
+  },
+  {
     year: 2025,
     title: "Galactic Problem Solver",
     organization: "NASA Space Apps Challenge",
@@ -133,7 +140,7 @@ export const CERTIFICATIONS: CertificationItem[] = [
   {
     title: "Virtual Internship in Python Programming",
     issuer: "DecodeLabs",
-    date: "07/2026",
+    date: "2025",
     status: "Completed",
     credentialNote: "Hands-on engineering internship applying Python to algorithmic tasks and automation modules",
     verifyUrl: "https://decodelabs.com",
@@ -142,7 +149,7 @@ export const CERTIFICATIONS: CertificationItem[] = [
   {
     title: "AI-Powered Analytics",
     issuer: "Grameenphone Academy",
-    date: "09/2026",
+    date: "2025",
     status: "Completed",
     credentialNote: "Application of machine learning algorithms for predictive and diagnostic telemetry analytics",
     verifyUrl: "https://grameenphone.academy",
@@ -151,7 +158,7 @@ export const CERTIFICATIONS: CertificationItem[] = [
   {
     title: "Data Foundations with AI",
     issuer: "Grameenphone Academy",
-    date: "09/2026",
+    date: "2025",
     status: "Completed",
     credentialNote: "Core foundations in big data pipelines, AI workflow orchestration, and statistical reasoning",
     verifyUrl: "https://grameenphone.academy",
@@ -160,7 +167,7 @@ export const CERTIFICATIONS: CertificationItem[] = [
   {
     title: "Data Analysis with Excel",
     issuer: "Futurenation",
-    date: "03/2025",
+    date: "2025",
     status: "Completed",
     credentialNote: "Advanced spreadsheet modeling, pivot tables, statistical functions, and dashboard generation",
     verifyUrl: "https://futurenation.gov.bd",
@@ -169,7 +176,7 @@ export const CERTIFICATIONS: CertificationItem[] = [
   {
     title: "Problem Solving (Basic)",
     issuer: "HackerRank",
-    date: "03/2025",
+    date: "2025",
     status: "Completed",
     credentialNote: "Verified certification covering fundamental data structures, sorting, and algorithmic complexity",
     verifyUrl: "https://www.hackerrank.com/certificates/verify",
@@ -178,7 +185,7 @@ export const CERTIFICATIONS: CertificationItem[] = [
   {
     title: "Data Science Fundamentals",
     issuer: "OSTAD",
-    date: "06/2026",
+    date: "2025",
     status: "Completed",
     credentialNote: "Comprehensive training in exploratory data analysis, NumPy, Pandas, and visual storytelling",
     verifyUrl: "https://ostad.app",
@@ -188,13 +195,13 @@ export const CERTIFICATIONS: CertificationItem[] = [
 
 export const VOLUNTEERING_ACTIVITIES: VolunteeringItem[] = [
   {
-    year: 2026,
+    year: 2025,
     roleOrActivity: "NASA Space Apps Challenge, Bangladesh",
     organization: "Global Organizing Committee / Local Bangladesh Chapter",
     description: "Contributed as local participant and event volunteer supporting innovation teams in regional challenges."
   },
   {
-    year: 2026,
+    year: 2025,
     roleOrActivity: "Bakeman's 4th International Language League (Divisional Round)",
     organization: "BASIS Students' Forum PUB Chapter, Bogura",
     description: "Coordinated logistics, participant registration, and stage management for the divisional academic competition."

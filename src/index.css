@@ -8,6 +8,7 @@
     overflow-x: hidden;
     max-width: 100vw;
     -webkit-tap-highlight-color: transparent;
+    scroll-behavior: smooth;
   }
 
   body {
@@ -18,6 +19,16 @@
     padding: 0;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* GPU layer promotion for silky 120fps scrolling and section reveals */
+  .interactive-card,
+  .animate-section-slide-up,
+  .reveal-on-scroll {
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
   }
 
   button, a {
